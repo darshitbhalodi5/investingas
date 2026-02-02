@@ -1,41 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Fuel, AlertCircle, CheckCircle, ArrowRight, Info } from "lucide-react";
-
-const SUPPORTED_CHAINS = [
-    { id: "ethereum", name: "Ethereum", price: 12, color: "#627eea" },
-    { id: "base", name: "Base", price: 0.5, color: "#0052ff" },
-    { id: "arbitrum", name: "Arbitrum", price: 0.1, color: "#28a0f0" },
-    { id: "polygon", name: "Polygon", price: 45, color: "#8247e5" },
-    { id: "optimism", name: "Optimism", price: 0.3, color: "#ff0420" },
-];
+import { Fuel, AlertCircle, CheckCircle, ArrowRight, Info, Loader2 } from "lucide-react";
+import { usePurchaseCredits, useUSDCBalance } from "@/hooks/useGasFutures";
+import { useAllGasPrices, useGasUnitsCalculator } from "@/hooks/useGasPrices";
 
 export default function BuyCreditsPage() {
     const { isConnected } = useAccount();
     const [selectedChain, setSelectedChain] = useState("ethereum");
     const [amount, setAmount] = useState("");
     const [expiry, setExpiry] = useState(30);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [txHash, setTxHash] = useState<string | null>(null);
 
-    const selectedChainData = SUPPORTED_CHAINS.find(c => c.id === selectedChain);
+    // Contract hooks
+    const { purchaseCredits, isPending, isApproving, purchaseSuccess } = usePurchaseCredits();
+    const { balance: usdcBalance, isLoading: balanceLoading } = useUSDCBalance();
+    const { prices, isLoading: pricesLoading } = useAllGasPrices();
+
+    // Calculate gas units
+    const { gasUnits, estimatedTxs } = useGasUnitsCalculator(amount, selectedChain);
+
+    const selectedChainData = prices.find(p => p.chain === selectedChain);
     const usdcAmount = parseFloat(amount) || 0;
     const fee = usdcAmount * 0.005; // 0.5% fee
     const netAmount = usdcAmount - fee;
-    const gasUnits = selectedChainData ? (netAmount / (selectedChainData.price * 0.000000001 * 3000)) : 0; // Simplified calc
+    const hasInsufficientBalance = usdcAmount > parseFloat(usdcBalance);
+
+    // Handle purchase success
+    useEffect(() => {
+        if (purchaseSuccess) {
+            setSuccess(true);
+        }
+    }, [purchaseSuccess]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!isConnected || usdcAmount < 10) return;
+        if (!isConnected || usdcAmount < 10 || hasInsufficientBalance) return;
 
-        setIsSubmitting(true);
-        // Simulate transaction
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsSubmitting(false);
-        setSuccess(true);
+        try {
+            await purchaseCredits(amount, selectedChain, expiry);
+        } catch (error) {
+            console.error("Purchase failed:", error);
+        }
     };
 
     if (!isConnected) {
@@ -61,10 +70,15 @@ export default function BuyCreditsPage() {
                 </div>
                 <h1 className="text-3xl font-bold mb-4">Credits Purchased!</h1>
                 <p className="text-white/60 mb-8 max-w-md">
-                    Your gas credits have been locked in at {selectedChainData?.price} gwei for {expiry} days.
+                    Your gas credits have been locked in at {selectedChainData?.priceGwei} gwei for {expiry} days.
                 </p>
+                {txHash && (
+                    <p className="text-sm text-white/40 mb-4">
+                        Transaction: {txHash.slice(0, 10)}...{txHash.slice(-8)}
+                    </p>
+                )}
                 <div className="flex gap-4">
-                    <button onClick={() => setSuccess(false)} className="px-6 py-3 bg-white/[0.05] border border-white/10 rounded-xl hover:bg-white/[0.1] transition-all font-semibold">
+                    <button onClick={() => { setSuccess(false); setAmount(""); }} className="px-6 py-3 bg-white/[0.05] border border-white/10 rounded-xl hover:bg-white/[0.1] transition-all font-semibold">
                         Buy More
                     </button>
                     <a href="/dashboard" className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all font-semibold flex items-center gap-2">
@@ -83,33 +97,45 @@ export default function BuyCreditsPage() {
                 <p className="text-white/60">
                     Lock in today&apos;s gas prices for future transactions
                 </p>
+                {!balanceLoading && (
+                    <p className="text-sm text-white/40 mt-2">
+                        USDC Balance: <span className="text-white font-medium">${parseFloat(usdcBalance).toLocaleString()}</span>
+                    </p>
+                )}
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Chain Selection */}
                 <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-6 rounded-2xl">
                     <label className="block text-sm font-medium text-white/60 mb-4">
-                        Select Chain
+                        Select Chain {pricesLoading && <Loader2 className="inline w-3 h-3 animate-spin ml-1" />}
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {SUPPORTED_CHAINS.map((chain) => (
+                        {prices.map((chain) => (
                             <button
-                                key={chain.id}
+                                key={chain.chain}
                                 type="button"
-                                onClick={() => setSelectedChain(chain.id)}
-                                className={`p-4 rounded-xl border transition-all text-left ${selectedChain === chain.id
-                                        ? "border-indigo-500 bg-indigo-500/10 text-white"
-                                        : "border-white/10 bg-white/[0.02] hover:border-white/20 text-white/70"
+                                onClick={() => setSelectedChain(chain.chain)}
+                                className={`p-4 rounded-xl border transition-all text-left ${selectedChain === chain.chain
+                                    ? "border-indigo-500 bg-indigo-500/10 text-white"
+                                    : "border-white/10 bg-white/[0.02] hover:border-white/20 text-white/70"
                                     }`}
                             >
-                                <div className="flex items-center gap-3 mb-2">
-                                    <div
-                                        className="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.4)]"
-                                        style={{ backgroundColor: chain.color }}
-                                    />
-                                    <span className="font-medium">{chain.name}</span>
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="font-medium">{chain.chainName}</span>
+                                    {chain.isBuySignal && (
+                                        <span className="text-xs px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full">
+                                            Good price
+                                        </span>
+                                    )}
                                 </div>
-                                <p className="text-sm text-white/40">{chain.price} gwei</p>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-lg font-semibold">{chain.priceGwei}</span>
+                                    <span className="text-white/40 text-sm">gwei</span>
+                                    <span className={`text-xs ml-auto ${chain.change24h < 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                        {chain.change24h > 0 ? '+' : ''}{chain.change24h}%
+                                    </span>
+                                </div>
                             </button>
                         ))}
                     </div>
@@ -152,6 +178,12 @@ export default function BuyCreditsPage() {
                             Minimum purchase is $10
                         </p>
                     )}
+                    {hasInsufficientBalance && usdcAmount >= 10 && (
+                        <p className="mt-3 text-sm text-red-500 flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4" />
+                            Insufficient USDC balance
+                        </p>
+                    )}
                 </div>
 
                 {/* Expiry Selection */}
@@ -166,8 +198,8 @@ export default function BuyCreditsPage() {
                                 type="button"
                                 onClick={() => setExpiry(days)}
                                 className={`px-6 py-3 rounded-xl border transition-all font-medium ${expiry === days
-                                        ? "border-indigo-500 bg-indigo-500/10 text-white"
-                                        : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20 hover:text-white"
+                                    ? "border-indigo-500 bg-indigo-500/10 text-white"
+                                    : "border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20 hover:text-white"
                                     }`}
                             >
                                 {days} days
@@ -183,11 +215,11 @@ export default function BuyCreditsPage() {
                         <div className="space-y-3 text-sm">
                             <div className="flex justify-between py-2 border-b border-white/5">
                                 <span className="text-white/60">Chain</span>
-                                <span className="font-medium">{selectedChainData?.name}</span>
+                                <span className="font-medium">{selectedChainData?.chainName}</span>
                             </div>
                             <div className="flex justify-between py-2 border-b border-white/5">
                                 <span className="text-white/60">Locked Price</span>
-                                <span className="font-medium text-green-400">{selectedChainData?.price} gwei</span>
+                                <span className="font-medium text-green-400">{selectedChainData?.priceGwei} gwei</span>
                             </div>
                             <div className="flex justify-between py-2 border-b border-white/5">
                                 <span className="text-white/60">Amount</span>
@@ -207,14 +239,16 @@ export default function BuyCreditsPage() {
                             </div>
                             <div className="flex justify-between py-2">
                                 <span className="text-white/60">Estimated Gas Units</span>
-                                <span className="font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">~{(gasUnits / 1000000).toFixed(2)}M</span>
+                                <span className="font-medium bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                                    ~{gasUnits} ({estimatedTxs.toLocaleString()} txs)
+                                </span>
                             </div>
                         </div>
 
                         <div className="mt-6 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-start gap-3">
                             <Info className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
                             <p className="text-sm text-white/70">
-                                Your credits will be locked at {selectedChainData?.price} gwei for {expiry} days.
+                                Your credits will be locked at {selectedChainData?.priceGwei} gwei for {expiry} days.
                                 You can redeem them anytime when gas prices are higher to save money.
                             </p>
                         </div>
@@ -224,13 +258,13 @@ export default function BuyCreditsPage() {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    disabled={usdcAmount < 10 || isSubmitting}
+                    disabled={usdcAmount < 10 || isPending || hasInsufficientBalance}
                     className="w-full py-4 text-lg font-bold rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2"
                 >
-                    {isSubmitting ? (
+                    {isPending ? (
                         <span className="flex items-center gap-2">
-                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            Processing...
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            {isApproving ? "Approving USDC..." : "Purchasing..."}
                         </span>
                     ) : (
                         <>
