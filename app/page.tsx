@@ -1,7 +1,7 @@
 "use client";
 
-import { Navbar } from "./components/Navbar";
-import { GasTicker } from "./components/GasTicker";
+import { Navbar } from "../components/Navbar";
+import { GasTicker } from "../components/GasTicker";
 import { ArrowRight, Shield, Zap, TrendingDown, Clock, Wallet, BarChart3, ArrowUpRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
 
