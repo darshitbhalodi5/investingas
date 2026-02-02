@@ -26,8 +26,8 @@ export function Navbar() {
                     <div className="hidden md:flex items-center gap-1">
                         <Link href="/dashboard" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Dashboard</Link>
                         <Link href="/dashboard/buy" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Buy Credits</Link>
+                        <Link href="/dashboard/trade" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Trade</Link>
                         <Link href="/dashboard/analytics" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Analytics</Link>
-                        <a href="#how-it-works" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">How It Works</a>
                     </div>
 
                     {/* Connect Wallet */}
@@ -54,8 +54,8 @@ export function Navbar() {
                         <div className="flex flex-col gap-2">
                             <Link href="/dashboard" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Dashboard</Link>
                             <Link href="/dashboard/buy" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Buy Credits</Link>
+                            <Link href="/dashboard/trade" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Trade</Link>
                             <Link href="/dashboard/analytics" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Analytics</Link>
-                            <a href="#how-it-works" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">How It Works</a>
                             <div className="mt-4">
                                 <ConnectButton />
                             </div>
