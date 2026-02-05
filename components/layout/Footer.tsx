@@ -1,4 +1,5 @@
 import { Zap } from "lucide-react";
+import { Typography } from "@/components/ui/Typography";
 
 export function Footer() {
     return (
@@ -9,17 +10,17 @@ export function Footer() {
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500">
                             <Zap className="w-4 h-4 text-white" />
                         </div>
-                        <span className="font-bold text-lg">InvestingAs</span>
+                        <Typography variant="bodyLarge" className="font-bold">InvestingAs</Typography>
                     </div>
                     <div className="flex items-center gap-8 text-sm text-white/40">
-                        <a href="#" className="hover:text-white transition">Docs</a>
-                        <a href="#" className="hover:text-white transition">GitHub</a>
-                        <a href="#" className="hover:text-white transition">Twitter</a>
-                        <a href="#" className="hover:text-white transition">Discord</a>
+                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Docs</Typography></a>
+                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">GitHub</Typography></a>
+                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Twitter</Typography></a>
+                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Discord</Typography></a>
                     </div>
-                    <p className="text-sm text-white/30">
+                    <Typography variant="bodySmall" className="text-white/30">
                         © 2026 InvestingAs. All rights reserved.
-                    </p>
+                    </Typography>
                 </div>
             </div>
         </footer>

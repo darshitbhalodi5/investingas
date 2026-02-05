@@ -4,6 +4,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import { Fuel, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Typography } from "@/components/ui/Typography";
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -17,17 +18,25 @@ export function Navbar() {
                         <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500">
                             <Fuel className="w-5 h-5 text-white" />
                         </div>
-                        <span className="text-xl font-bold">
+                        <Typography variant="h4" className="font-bold">
                             Investing<span className="bg-gradient-to-r from-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">As</span>
-                        </span>
+                        </Typography>
                     </Link>
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-1">
-                        <Link href="/dashboard" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Dashboard</Link>
-                        <Link href="/dashboard/buy" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Buy Credits</Link>
-                        <Link href="/dashboard/trade" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Trade</Link>
-                        <Link href="/dashboard/analytics" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Analytics</Link>
+                        <Link href="/dashboard" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                            <Typography variant="body" className="text-white/70 hover:text-white font-medium">Dashboard</Typography>
+                        </Link>
+                        <Link href="/dashboard/buy" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                            <Typography variant="body" className="text-white/70 hover:text-white font-medium">Buy Credits</Typography>
+                        </Link>
+                        <Link href="/dashboard/trade" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                            <Typography variant="body" className="text-white/70 hover:text-white font-medium">Trade</Typography>
+                        </Link>
+                        <Link href="/dashboard/analytics" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                            <Typography variant="body" className="text-white/70 hover:text-white font-medium">Analytics</Typography>
+                        </Link>
                     </div>
 
                     {/* Connect Wallet */}
@@ -52,10 +61,18 @@ export function Navbar() {
                 {mobileMenuOpen && (
                     <div className="md:hidden border-t border-white/5 py-4 px-6">
                         <div className="flex flex-col gap-2">
-                            <Link href="/dashboard" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Dashboard</Link>
-                            <Link href="/dashboard/buy" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Buy Credits</Link>
-                            <Link href="/dashboard/trade" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Trade</Link>
-                            <Link href="/dashboard/analytics" className="px-4 py-2 text-white/70 font-medium rounded-lg hover:text-white hover:bg-white/5 transition-all">Analytics</Link>
+                            <Link href="/dashboard" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                                <Typography variant="body" className="text-white/70 hover:text-white font-medium">Dashboard</Typography>
+                            </Link>
+                            <Link href="/dashboard/buy" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                                <Typography variant="body" className="text-white/70 hover:text-white font-medium">Buy Credits</Typography>
+                            </Link>
+                            <Link href="/dashboard/trade" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                                <Typography variant="body" className="text-white/70 hover:text-white font-medium">Trade</Typography>
+                            </Link>
+                            <Link href="/dashboard/analytics" className="px-4 py-2 hover:bg-white/5 transition-all rounded-lg">
+                                <Typography variant="body" className="text-white/70 hover:text-white font-medium">Analytics</Typography>
+                            </Link>
                             <div className="mt-4">
                                 <ConnectButton />
                             </div>

@@ -5,6 +5,7 @@ import { Footer } from "../components/layout/Footer";
 import { GasTicker } from "../components/GasTicker";
 import { ArrowRight, Shield, Zap, TrendingDown, Clock, Wallet, BarChart3, ArrowUpRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { Typography } from "@/components/ui/Typography";
 
 export default function HomePage() {
   return (
@@ -26,17 +27,17 @@ export default function HomePage() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight mb-6 tracking-tight">
+          <Typography variant="h1" className="mb-6 leading-tight tracking-tight">
             Buy Tomorrow&apos;s Gas
             <br />
             <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-fuchsia-400 bg-clip-text text-transparent">at Today&apos;s Prices</span>
-          </h1>
+          </Typography>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <Typography variant="lead" className="text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed">
             Lock in current gas prices for future blockchain transactions.
             Save up to <span className="text-green-400 font-semibold">90%</span> when gas spikes.
-          </p>
+          </Typography>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -75,12 +76,12 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
             <div>
-              <h2 className="text-2xl md:text-4xl font-bold mb-4">
+              <Typography variant="h2" className="mb-4">
                 See Your Potential <span className="bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">Savings</span>
-              </h2>
-              <p className="text-white/60 mb-8 leading-relaxed">
+              </Typography>
+              <Typography variant="body" className="text-white/60 mb-8 leading-relaxed">
                 Gas prices fluctuate wildly. Lock in low prices now and use them when prices spike.
-              </p>
+              </Typography>
 
               {/* Example Calculation */}
               <div className="space-y-4">
@@ -123,12 +124,12 @@ export default function HomePage() {
       {/* Features */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <Typography variant="h2" className="mb-4">
             Why Choose <span className="bg-gradient-to-r from-indigo-400 to-fuchsia-400 bg-clip-text text-transparent">InvestingAs</span>?
-          </h2>
-          <p className="text-white/60 max-w-xl mx-auto">
+          </Typography>
+          <Typography variant="bodyLarge" className="text-white/60 max-w-xl mx-auto">
             The first decentralized gas futures marketplace built for DeFi users, protocols, and enterprises.
-          </p>
+          </Typography>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -137,10 +138,10 @@ export default function HomePage() {
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-indigo-500/20 group-hover:scale-110 transition-transform">
               <Shield className="w-7 h-7 text-indigo-400" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Price Protection</h3>
-            <p className="text-white/60 leading-relaxed">
+            <Typography variant="h4" className="mb-3">Price Protection</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed">
               Lock in today&apos;s gas prices for 7-90 days. Never worry about gas spikes again.
-            </p>
+            </Typography>
           </div>
 
           {/* Feature 2 */}
@@ -148,10 +149,10 @@ export default function HomePage() {
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-cyan-500/20 group-hover:scale-110 transition-transform">
               <Zap className="w-7 h-7 text-cyan-400" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Instant Redemption</h3>
-            <p className="text-white/60 leading-relaxed">
+            <Typography variant="h4" className="mb-3">Instant Redemption</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed">
               Redeem your credits instantly when gas prices spike. No waiting, no hassle.
-            </p>
+            </Typography>
           </div>
 
           {/* Feature 3 */}
@@ -159,10 +160,10 @@ export default function HomePage() {
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-pink-500/20 group-hover:scale-110 transition-transform">
               <BarChart3 className="w-7 h-7 text-pink-400" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Track Savings</h3>
-            <p className="text-white/60 leading-relaxed">
+            <Typography variant="h4" className="mb-3">Track Savings</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed">
               Beautiful analytics dashboard shows exactly how much you&apos;ve saved over time.
-            </p>
+            </Typography>
           </div>
 
           {/* Feature 4 */}
@@ -170,10 +171,10 @@ export default function HomePage() {
             <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-6 bg-green-500/20 group-hover:scale-110 transition-transform">
               <Clock className="w-7 h-7 text-green-400" />
             </div>
-            <h3 className="text-xl font-semibold mb-3">Flexible Expiry</h3>
-            <p className="text-white/60 leading-relaxed">
+            <Typography variant="h4" className="mb-3">Flexible Expiry</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed">
               Choose expiry from 7 to 90 days. Transfer credits to other users anytime.
-            </p>
+            </Typography>
           </div>
         </div>
       </section>
@@ -183,12 +184,12 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-900/10 to-transparent pointer-events-none" />
 
         <div className="text-center mb-16 relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <Typography variant="h2" className="mb-4">
             How It <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Works</span>
-          </h2>
-          <p className="text-white/60 max-w-xl mx-auto">
+          </Typography>
+          <Typography variant="bodyLarge" className="text-white/60 max-w-xl mx-auto">
             Three simple steps to start saving on gas fees
-          </p>
+          </Typography>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto relative z-10">
@@ -197,10 +198,10 @@ export default function HomePage() {
             <div className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl font-bold bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl shadow-indigo-500/20">
               1
             </div>
-            <h3 className="text-xl font-semibold mb-3">Buy Gas Credits</h3>
-            <p className="text-white/60 leading-relaxed px-4">
+            <Typography variant="h4" className="mb-3">Buy Gas Credits</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed px-4">
               Deposit USDC when gas prices are low. We lock in that price for you.
-            </p>
+            </Typography>
           </div>
 
           {/* Step 2 */}
@@ -208,10 +209,10 @@ export default function HomePage() {
             <div className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl font-bold bg-gradient-to-br from-purple-500 to-pink-600 shadow-xl shadow-purple-500/20">
               2
             </div>
-            <h3 className="text-xl font-semibold mb-3">Wait for Spike</h3>
-            <p className="text-white/60 leading-relaxed px-4">
+            <Typography variant="h4" className="mb-3">Wait for Spike</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed px-4">
               When gas prices spike due to NFT drops, market volatility, or high demand...
-            </p>
+            </Typography>
           </div>
 
           {/* Step 3 */}
@@ -219,10 +220,10 @@ export default function HomePage() {
             <div className="w-20 h-20 rounded-2xl mx-auto mb-6 flex items-center justify-center text-3xl font-bold bg-gradient-to-br from-pink-500 to-rose-600 shadow-xl shadow-pink-500/20">
               3
             </div>
-            <h3 className="text-xl font-semibold mb-3">Redeem & Save</h3>
-            <p className="text-white/60 leading-relaxed px-4">
+            <Typography variant="h4" className="mb-3">Redeem & Save</Typography>
+            <Typography variant="body" className="text-white/60 leading-relaxed px-4">
               Use your credits at the locked-in price. Keep the difference as savings!
-            </p>
+            </Typography>
           </div>
         </div>
       </section>
@@ -231,12 +232,12 @@ export default function HomePage() {
       <section className="container mx-auto px-6 py-20">
         <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-10 md:p-14 rounded-[2rem] text-center">
           <div className="mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            <Typography variant="h2" className="mb-4">
               Supported <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Chains</span>
-            </h2>
-            <p className="text-white/60">
+            </Typography>
+            <Typography variant="body" className="text-white/60">
               Buy credits for any of these networks and redeem across chains
-            </p>
+            </Typography>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6">
@@ -266,12 +267,12 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-20">
         <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <Typography variant="h2" className="mb-6">
             Ready to Stop <span className="text-red-400">Overpaying</span>?
-          </h2>
-          <p className="text-white/60 mb-10 text-lg">
+          </Typography>
+          <Typography variant="lead" className="text-white/60 mb-10">
             Join thousands of DeFi users who are saving money on gas fees every day.
-          </p>
+          </Typography>
           <Link href="/dashboard/buy" className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xl rounded-2xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-2xl hover:shadow-[0_0_40px_rgba(99,102,241,0.4)] transform hover:-translate-y-1">
             Get Started Now
             <ArrowUpRight className="w-6 h-6" />
