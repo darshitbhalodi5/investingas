@@ -16,6 +16,10 @@ export default {
                 mid: "1345px",
                 "2xl": "1536px",
             },
+            fontFamily: {
+                sans: ["var(--font-space-grotesk)", "sans-serif"],
+                serif: ["var(--font-biorhyme)", "serif"],
+            },
         },
     },
     plugins: [],

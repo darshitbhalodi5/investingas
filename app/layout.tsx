@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { BioRhyme, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 
-const inter = Inter({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-space-grotesk",
+});
+
+const bioRhyme = BioRhyme({
+  subsets: ["latin"],
+  variable: "--font-biorhyme",
+  weight: ["200", "300", "400", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -26,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} antialiased`}>
+      <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans`}>
         <Providers>
           {children}
         </Providers>
