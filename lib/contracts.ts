@@ -31,134 +31,96 @@ export const SUPPORTED_CHAINS = [
     { id: 'optimism', name: 'Optimism', symbol: 'ETH', chainId: 10 },
 ] as const;
 
-// ArcGasFutures ABI (key functions only)
-export const ARC_GAS_FUTURES_ABI = [
-    // Read Functions
+// InvestInGasHook ABI (Uniswap v4)
+export const INVEST_IN_GAS_HOOK_ABI = [
+    // Core Functions
     {
-        name: 'getUserCredits',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'user', type: 'address' }],
-        outputs: [{
-            name: '',
-            type: 'tuple[]',
-            components: [
-                { name: 'id', type: 'uint256' },
-                { name: 'owner', type: 'address' },
-                { name: 'targetChain', type: 'string' },
-                { name: 'gasUnits', type: 'uint256' },
-                { name: 'remainingGasUnits', type: 'uint256' },
-                { name: 'lockedPriceGwei', type: 'uint256' },
-                { name: 'usdcPaid', type: 'uint256' },
-                { name: 'purchaseTime', type: 'uint256' },
-                { name: 'expiryTime', type: 'uint256' },
-                { name: 'isActive', type: 'bool' },
-            ],
-        }],
-    },
-    {
-        name: 'getGasPriceData',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'chain', type: 'string' }],
-        outputs: [{
-            name: '',
-            type: 'tuple',
-            components: [
-                { name: 'currentPriceGwei', type: 'uint256' },
-                { name: 'volatility24h', type: 'uint256' },
-                { name: 'high24h', type: 'uint256' },
-                { name: 'low24h', type: 'uint256' },
-                { name: 'lastUpdated', type: 'uint256' },
-            ],
-        }],
-    },
-    {
-        name: 'calculateSavings',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [
-            { name: 'creditId', type: 'uint256' },
-            { name: 'user', type: 'address' },
-            { name: 'gasUnitsToUse', type: 'uint256' },
-        ],
-        outputs: [
-            { name: 'savingsUSDC', type: 'uint256' },
-            { name: 'lockedCost', type: 'uint256' },
-            { name: 'currentCost', type: 'uint256' },
-        ],
-    },
-    {
-        name: 'userSavings',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'user', type: 'address' }],
-        outputs: [{ name: '', type: 'uint256' }],
-    },
-    {
-        name: 'userPayouts',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [{ name: 'user', type: 'address' }],
-        outputs: [{ name: '', type: 'uint256' }],
-    },
-    {
-        name: 'getAvailableBalance',
-        type: 'function',
-        stateMutability: 'view',
-        inputs: [],
-        outputs: [{ name: '', type: 'uint256' }],
-    },
-    // Write Functions
-    {
-        name: 'purchaseCredits',
+        name: 'purchasePosition',
         type: 'function',
         stateMutability: 'nonpayable',
         inputs: [
             { name: 'usdcAmount', type: 'uint256' },
+            { name: 'minWethOut', type: 'uint256' },
+            { name: 'lockedGasPriceWei', type: 'uint96' },
             { name: 'targetChain', type: 'string' },
-            { name: 'expiryDays', type: 'uint256' },
+            { name: 'expiryDuration', type: 'uint40' },
+            { name: 'buyer', type: 'address' },
         ],
-        outputs: [{ name: 'creditId', type: 'uint256' }],
+        outputs: [{ name: 'tokenId', type: 'uint256' }],
     },
     {
-        name: 'redeemCredits',
+        name: 'redeemPosition',
         type: 'function',
         stateMutability: 'nonpayable',
         inputs: [
-            { name: 'creditId', type: 'uint256' },
-            { name: 'gasUnitsToUse', type: 'uint256' },
+            { name: 'tokenId', type: 'uint256' },
+            { name: 'wethAmount', type: 'uint256' },
+            { name: 'lifiData', type: 'bytes' },
+            { name: 'recipient', type: 'address' },
         ],
-        outputs: [{ name: 'savedAmount', type: 'uint256' }],
+        outputs: [],
+    },
+    // View Functions
+    {
+        name: 'getPosition',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'tokenId', type: 'uint256' }],
+        outputs: [{
+            name: '',
+            type: 'tuple',
+            components: [
+                { name: 'wethAmount', type: 'uint256' },
+                { name: 'remainingWethAmount', type: 'uint256' },
+                { name: 'lockedGasPriceWei', type: 'uint96' },
+                { name: 'purchaseTimestamp', type: 'uint40' },
+                { name: 'expiry', type: 'uint40' },
+                { name: 'targetChain', type: 'string' },
+            ],
+        }],
     },
     {
-        name: 'redeemCredits',
+        name: 'getGasUnitsAvailable',
         type: 'function',
-        stateMutability: 'nonpayable',
-        inputs: [
-            { name: 'creditId', type: 'uint256' },
-            { name: 'gasUnitsToUse', type: 'uint256' },
-            {
-                name: 'options', type: 'tuple', components: [
-                    { name: 'cashSettlement', type: 'bool' },
-                    { name: 'lifiData', type: 'bytes' },
-                ]
-            },
-        ],
-        outputs: [{ name: 'savedAmount', type: 'uint256' }],
+        stateMutability: 'view',
+        inputs: [{ name: 'tokenId', type: 'uint256' }],
+        outputs: [{ name: '', type: 'uint256' }],
     },
     {
-        name: 'transferCreditsPartial',
+        name: 'relayer',
         type: 'function',
-        stateMutability: 'nonpayable',
-        inputs: [
-            { name: 'creditId', type: 'uint256' },
-            { name: 'to', type: 'address' },
-            { name: 'gasUnitsToTransfer', type: 'uint256' },
-        ],
-        outputs: [{ name: 'newCreditId', type: 'uint256' }],
+        inputs: [],
+        outputs: [{ name: '', type: 'address' }],
+        stateMutability: 'view',
     },
 ] as const;
+
+// EIP-712 Types
+export const EIP712_DOMAIN = {
+    name: 'InvestInGas',
+    version: '1',
+    chainId: 11155111, // Sepolia
+    verifyingContract: CONTRACT_ADDRESSES.gasFuturesHook as `0x${string}`,
+} as const;
+
+export const PURCHASE_TYPE = {
+    Purchase: [
+        { name: 'user', type: 'address' },
+        { name: 'usdcAmount', type: 'uint256' },
+        { name: 'targetChain', type: 'string' },
+        { name: 'expiryDays', type: 'uint256' },
+        { name: 'timestamp', type: 'uint256' },
+    ],
+} as const;
+
+export const REDEEM_TYPE = {
+    Redeem: [
+        { name: 'user', type: 'address' },
+        { name: 'tokenId', type: 'uint256' },
+        { name: 'wethAmount', type: 'uint256' },
+        { name: 'timestamp', type: 'uint256' },
+    ],
+} as const;
 
 // ERC20 ABI for USDC
 export const ERC20_ABI = [

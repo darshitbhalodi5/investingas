@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Fuel, Clock, ArrowRight, Send, AlertTriangle, Loader2, CheckCircle, X } from "lucide-react";
 import Link from "next/link";
-import { useUserCredits, useRedeemCredits, useTransferCredits, useCalculateSavings, FormattedGasCredit } from "@/hooks/useGasFutures";
+import { useUserCredits, useRedeemCredits, useTransferCredits, useCalculateSavings, GasCredit } from "@/hooks/useGasFutures";
 import { useAllGasPrices } from "@/hooks/useGasPrices";
 import { CROSS_CHAIN_OPTIONS, getMockLifiQuote, formatLifiEstimate } from "@/lib/lifi";
 
@@ -20,7 +20,7 @@ const chainColors: Record<string, string> = {
 
 export default function CreditsPage() {
     const { isConnected } = useAccount();
-    const [selectedCredit, setSelectedCredit] = useState<FormattedGasCredit | null>(null);
+    const [selectedCredit, setSelectedCredit] = useState<GasCredit | null>(null);
     const [showRedeemModal, setShowRedeemModal] = useState(false);
     const [showTransferModal, setShowTransferModal] = useState(false);
     const [transferAddress, setTransferAddress] = useState("");
@@ -249,8 +249,8 @@ export default function CreditsPage() {
                             <button
                                 onClick={() => setRedeemType("cash")}
                                 className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all ${redeemType === "cash"
-                                        ? "bg-indigo-600 text-white"
-                                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                                    ? "bg-indigo-600 text-white"
+                                    : "bg-white/5 text-white/60 hover:bg-white/10"
                                     }`}
                             >
                                 Cash (USDC)
@@ -258,8 +258,8 @@ export default function CreditsPage() {
                             <button
                                 onClick={() => setRedeemType("crosschain")}
                                 className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all ${redeemType === "crosschain"
-                                        ? "bg-indigo-600 text-white"
-                                        : "bg-white/5 text-white/60 hover:bg-white/10"
+                                    ? "bg-indigo-600 text-white"
+                                    : "bg-white/5 text-white/60 hover:bg-white/10"
                                     }`}
                             >
                                 Cross-Chain Gas
@@ -290,8 +290,8 @@ export default function CreditsPage() {
                                             key={chain.chainId}
                                             onClick={() => setSelectedDestChain(chain.chainId)}
                                             className={`p-3 rounded-lg text-sm font-medium transition-all ${selectedDestChain === chain.chainId
-                                                    ? "bg-indigo-600 text-white"
-                                                    : "bg-white/5 text-white/60 hover:bg-white/10"
+                                                ? "bg-indigo-600 text-white"
+                                                : "bg-white/5 text-white/60 hover:bg-white/10"
                                                 }`}
                                         >
                                             {chain.icon} {chain.name}

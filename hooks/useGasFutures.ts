@@ -5,32 +5,23 @@
 
 'use client';
 
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSignTypedData } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import { useState, useEffect } from 'react';
-import { CONTRACT_ADDRESSES, ARC_GAS_FUTURES_ABI, ERC20_ABI } from '@/lib/contracts';
+import { CONTRACT_ADDRESSES, INVEST_IN_GAS_HOOK_ABI, ERC20_ABI, EIP712_DOMAIN, PURCHASE_TYPE, REDEEM_TYPE } from '@/lib/contracts';
+import { api } from '@/lib/api';
 
 // Types
 export interface GasCredit {
-    id: bigint;
+    id: number;
+    tokenId: number;
     owner: string;
     targetChain: string;
-    gasUnits: bigint;
-    remainingGasUnits: bigint;
-    lockedPriceGwei: bigint;
-    usdcPaid: bigint;
-    purchaseTime: bigint;
-    expiryTime: bigint;
-    isActive: boolean;
-}
-
-export interface FormattedGasCredit {
-    id: number;
-    targetChain: string;
-    gasUnits: string;
-    remainingGasUnits: string;
+    gasUnits: string;          // Formatted (gas units)
+    remainingGasUnits: string; // Formatted (gas units)
     lockedPriceGwei: number;
-    usdcPaid: string;
+    purchaseTimestamp: number;
+    expiryTimestamp: number;
     purchaseDate: Date;
     expiryDate: Date;
     isActive: boolean;
@@ -39,50 +30,61 @@ export interface FormattedGasCredit {
 }
 
 // Format credit for display
-function formatCredit(credit: GasCredit): FormattedGasCredit {
+function formatCredit(position: any): GasCredit {
     const now = Date.now();
-    const expiryTime = Number(credit.expiryTime) * 1000;
+    const expiryTime = position.expiry * 1000;
 
     return {
-        id: Number(credit.id),
-        targetChain: credit.targetChain,
-        gasUnits: formatUnits(credit.gasUnits, 18),
-        remainingGasUnits: formatUnits(credit.remainingGasUnits, 18),
-        lockedPriceGwei: Number(credit.lockedPriceGwei),
-        usdcPaid: formatUnits(credit.usdcPaid, 6),
-        purchaseDate: new Date(Number(credit.purchaseTime) * 1000),
+        id: position.tokenId,
+        tokenId: position.tokenId,
+        owner: position.owner,
+        targetChain: position.targetChain,
+        gasUnits: formatUnits(BigInt(position.gasUnitsAvailable || 0), 0),
+        remainingGasUnits: formatUnits(BigInt(position.gasUnitsAvailable || 0), 0),
+        lockedPriceGwei: Number(formatUnits(BigInt(position.lockedGasPriceWei), 9)),
+        purchaseTimestamp: position.purchaseTimestamp,
+        expiryTimestamp: position.expiry,
+        purchaseDate: new Date(position.purchaseTimestamp * 1000),
         expiryDate: new Date(expiryTime),
-        isActive: credit.isActive,
-        isExpired: now > expiryTime,
+        isActive: !position.isExpired,
+        isExpired: position.isExpired,
         daysUntilExpiry: Math.max(0, Math.floor((expiryTime - now) / (1000 * 60 * 60 * 24))),
     };
 }
 
 /**
- * Hook to fetch user's gas credits
+ * Hook to fetch user's gas credits (from Relayer API)
  */
 export function useUserCredits() {
     const { address } = useAccount();
+    const [credits, setCredits] = useState<GasCredit[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<any>(null);
 
-    const { data, isLoading, error, refetch } = useReadContract({
-        address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-        abi: ARC_GAS_FUTURES_ABI,
-        functionName: 'getUserCredits',
-        args: address ? [address] : undefined,
-        query: {
-            enabled: !!address,
-        },
-    });
+    const fetchCredits = async () => {
+        if (!address) return;
+        setIsLoading(true);
+        setError(null);
+        try {
+            const positions = await api.getUserPositions(address);
+            setCredits(positions.map(formatCredit));
+        } catch (err) {
+            console.error('Failed to fetch credits from relayer:', err);
+            setError(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    const credits: FormattedGasCredit[] = data
-        ? (data as GasCredit[]).map(formatCredit).filter(c => c.isActive)
-        : [];
+    useEffect(() => {
+        fetchCredits();
+    }, [address]);
 
     return {
         credits,
         isLoading,
         error,
-        refetch,
+        refetch: fetchCredits,
         totalCredits: credits.length,
         activeCredits: credits.filter(c => !c.isExpired).length,
     };
@@ -90,48 +92,28 @@ export function useUserCredits() {
 
 /**
  * Hook to fetch user's savings stats
+ * @deprecated Not supported in v2 relayer yet
  */
 export function useUserStats() {
-    const { address } = useAccount();
-
-    const { data: savings } = useReadContract({
-        address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-        abi: ARC_GAS_FUTURES_ABI,
-        functionName: 'userSavings',
-        args: address ? [address] : undefined,
-        query: { enabled: !!address },
-    });
-
-    const { data: payouts } = useReadContract({
-        address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-        abi: ARC_GAS_FUTURES_ABI,
-        functionName: 'userPayouts',
-        args: address ? [address] : undefined,
-        query: { enabled: !!address },
-    });
-
     return {
-        totalSavings: savings ? formatUnits(savings as bigint, 6) : '0',
-        totalPayouts: payouts ? formatUnits(payouts as bigint, 6) : '0',
+        totalSavings: '0',
+        totalPayouts: '0',
     };
 }
 
 /**
- * Hook to purchase gas credits
+ * Hook to purchase gas credits (via Relayer)
  */
 export function usePurchaseCredits() {
     const { address } = useAccount();
+    const { signTypedDataAsync } = useSignTypedData();
     const [isPending, setIsPending] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
+    // Keep approval logic as is
     const { writeContract: approve, data: approveHash } = useWriteContract();
-    const { writeContract: purchase, data: purchaseHash } = useWriteContract();
-
     const { isLoading: isApproving, isSuccess: approveSuccess } = useWaitForTransactionReceipt({
         hash: approveHash,
-    });
-
-    const { isLoading: isPurchasing, isSuccess: purchaseSuccess } = useWaitForTransactionReceipt({
-        hash: purchaseHash,
     });
 
     // Check allowance
@@ -139,7 +121,8 @@ export function usePurchaseCredits() {
         address: CONTRACT_ADDRESSES.usdc as `0x${string}`,
         abi: ERC20_ABI,
         functionName: 'allowance',
-        args: address ? [address, CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`] : undefined,
+        // Approve spender: Hook contract
+        args: address ? [address, CONTRACT_ADDRESSES.gasFuturesHook as `0x${string}`] : undefined,
         query: { enabled: !!address },
     });
 
@@ -151,32 +134,57 @@ export function usePurchaseCredits() {
         if (!address) throw new Error('Wallet not connected');
 
         setIsPending(true);
+        setIsSuccess(false);
         const amount = parseUnits(usdcAmount, 6);
+        const timestamp = Math.floor(Date.now() / 1000);
 
         try {
-            // Check if approval needed
+            // 1. Check if approval needed
             const currentAllowance = (allowance as bigint) || 0n;
             if (currentAllowance < amount) {
                 approve({
                     address: CONTRACT_ADDRESSES.usdc as `0x${string}`,
                     abi: ERC20_ABI,
                     functionName: 'approve',
-                    args: [CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`, amount],
+                    args: [CONTRACT_ADDRESSES.gasFuturesHook as `0x${string}`, amount],
                 });
-
-                // Wait for approval to be confirmed before purchasing
                 return { step: 'approving', hash: approveHash };
             }
 
-            // Execute purchase
-            purchase({
-                address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-                abi: ARC_GAS_FUTURES_ABI,
-                functionName: 'purchaseCredits',
-                args: [amount, targetChain, BigInt(expiryDays)],
+            // 2. Sign EIP-712 Intent
+            const signature = await signTypedDataAsync({
+                domain: EIP712_DOMAIN,
+                types: PURCHASE_TYPE,
+                primaryType: 'Purchase',
+                message: {
+                    user: address,
+                    usdcAmount: amount,
+                    targetChain,
+                    expiryDays: BigInt(expiryDays),
+                    timestamp: BigInt(timestamp),
+                },
             });
 
-            return { step: 'purchasing', hash: purchaseHash };
+            // 3. Submit to Relayer
+            const result = await api.purchase({
+                user: address,
+                usdcAmount: usdcAmount,
+                targetChain,
+                expiryDays,
+                userSignature: signature,
+                timestamp,
+            });
+
+            if (result.success) {
+                setIsSuccess(true);
+                return { step: 'purchasing', hash: result.txHash as `0x${string}` };
+            } else {
+                throw new Error('Purchase failed via relayer');
+            }
+
+        } catch (error) {
+            console.error('Purchase failed:', error);
+            throw error;
         } finally {
             setIsPending(false);
         }
@@ -184,127 +192,87 @@ export function usePurchaseCredits() {
 
     return {
         purchaseCredits,
-        isPending: isPending || isApproving || isPurchasing,
+        isPending: isPending || isApproving,
         isApproving,
-        isPurchasing,
+        isPurchasing: isPending, // Relayer call is pending
         approveSuccess,
-        purchaseSuccess,
+        purchaseSuccess: isSuccess,
         refetchAllowance,
     };
 }
 
 /**
- * Hook to redeem gas credits (cash settlement)
+ * Hook to redeem gas credits (via Relayer)
  */
 export function useRedeemCredits() {
-    const { writeContract, data: hash } = useWriteContract();
+    const { address } = useAccount();
+    const { signTypedDataAsync } = useSignTypedData();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [error, setError] = useState<any>(null);
+    const [hash, setHash] = useState<`0x${string}` | undefined>(undefined);
 
-    const { isLoading, isSuccess, error } = useWaitForTransactionReceipt({
-        hash,
-    });
+    const redeemCredits = async (creditId: number, gasUnitsToUse: string) => {
+        if (!address) throw new Error('Wallet not connected');
 
-    const redeemCredits = (creditId: number, gasUnitsToUse: string) => {
-        const units = parseUnits(gasUnitsToUse, 18);
+        setIsLoading(true);
+        setIsSuccess(false);
+        setError(null);
+        setHash(undefined);
 
-        writeContract({
-            address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-            abi: ARC_GAS_FUTURES_ABI,
-            functionName: 'redeemCredits',
-            args: [BigInt(creditId), units],
-        });
-    };
+        try {
+            const timestamp = Math.floor(Date.now() / 1000);
+            const units = gasUnitsToUse === 'max' ? 0n : parseUnits(gasUnitsToUse, 18);
 
-    const redeemCreditsWithLifi = (
-        creditId: number,
-        gasUnitsToUse: string,
-        lifiData: `0x${string}`
-    ) => {
-        const units = parseUnits(gasUnitsToUse, 18);
+            let signAmount = units;
+            if (gasUnitsToUse === 'max') {
+                const pos = await api.getPosition(creditId);
+                signAmount = BigInt(pos?.remainingWethAmount || 0);
+            }
 
-        writeContract({
-            address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-            abi: ARC_GAS_FUTURES_ABI,
-            functionName: 'redeemCredits',
-            args: [
-                BigInt(creditId),
-                units,
-                { cashSettlement: false, lifiData },
-            ],
-        });
+            // 1. Sign EIP-712 Intent
+            const signature = await signTypedDataAsync({
+                domain: EIP712_DOMAIN,
+                types: REDEEM_TYPE,
+                primaryType: 'Redeem',
+                message: {
+                    user: address,
+                    tokenId: BigInt(creditId),
+                    wethAmount: signAmount,
+                    timestamp: BigInt(timestamp),
+                },
+            });
+
+            // 2. Submit to Relayer
+            const result = await api.redeem({
+                user: address,
+                tokenId: creditId,
+                wethAmount: gasUnitsToUse === 'max' ? 'max' : signAmount.toString(),
+                userSignature: signature,
+                timestamp,
+            });
+
+            if (result.success) {
+                setIsSuccess(true);
+                setHash(result.txHash as `0x${string}`);
+            } else {
+                throw new Error('Redeem failed');
+            }
+        } catch (err) {
+            console.error('Redeem error:', err);
+            setError(err);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return {
         redeemCredits,
-        redeemCreditsWithLifi,
+        redeemCreditsWithLifi: redeemCredits, // Alias for now
         isLoading,
         isSuccess,
         error,
         hash,
-    };
-}
-
-/**
- * Hook to transfer credits
- */
-export function useTransferCredits() {
-    const { writeContract, data: hash } = useWriteContract();
-
-    const { isLoading, isSuccess, error } = useWaitForTransactionReceipt({
-        hash,
-    });
-
-    const transferCredits = (
-        creditId: number,
-        toAddress: string,
-        gasUnitsToTransfer: string
-    ) => {
-        const units = parseUnits(gasUnitsToTransfer, 18);
-
-        writeContract({
-            address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-            abi: ARC_GAS_FUTURES_ABI,
-            functionName: 'transferCreditsPartial',
-            args: [BigInt(creditId), toAddress as `0x${string}`, units],
-        });
-    };
-
-    return {
-        transferCredits,
-        isLoading,
-        isSuccess,
-        error,
-        hash,
-    };
-}
-
-/**
- * Hook to calculate potential savings
- */
-export function useCalculateSavings(creditId: number, gasUnits: string) {
-    const { address } = useAccount();
-    const units = gasUnits ? parseUnits(gasUnits, 18) : 0n;
-
-    const { data, isLoading } = useReadContract({
-        address: CONTRACT_ADDRESSES.arcGasFutures as `0x${string}`,
-        abi: ARC_GAS_FUTURES_ABI,
-        functionName: 'calculateSavings',
-        args: address && units > 0n ? [BigInt(creditId), address, units] : undefined,
-        query: {
-            enabled: !!address && units > 0n,
-        },
-    });
-
-    if (!data) {
-        return { savingsUSDC: '0', lockedCost: '0', currentCost: '0', isLoading };
-    }
-
-    const [savings, locked, current] = data as [bigint, bigint, bigint];
-
-    return {
-        savingsUSDC: formatUnits(savings, 6),
-        lockedCost: formatUnits(locked, 6),
-        currentCost: formatUnits(current, 6),
-        isLoading,
     };
 }
 
@@ -328,4 +296,17 @@ export function useUSDCBalance() {
         isLoading,
         refetch,
     };
+}
+
+// Deprecated hooks stubbed for compatibility
+export function useTransferCredits() {
+    return {
+        transferCredits: (id: number, to: string, amount: string) => { console.log('Transfer not supported yet'); },
+        isLoading: false,
+        isSuccess: false,
+        error: null
+    };
+}
+export function useCalculateSavings() {
+    return { savingsUSDC: '0', lockedCost: '0', currentCost: '0', isLoading: false };
 }
