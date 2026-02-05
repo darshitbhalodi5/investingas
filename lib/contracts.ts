@@ -6,7 +6,6 @@
 // Contract Addresses (update after deployment)
 export const CONTRACT_ADDRESSES = {
     // Arc L1 Contracts
-    arcGasFutures: process.env.NEXT_PUBLIC_ARC_GAS_FUTURES || '0x0000000000000000000000000000000000000000',
     gasFuturesHook: process.env.NEXT_PUBLIC_GAS_FUTURES_HOOK || '0x0000000000000000000000000000000000000000',
     usdc: process.env.NEXT_PUBLIC_USDC_ADDRESS || '0x0000000000000000000000000000000000000000',
     lifiDiamond: process.env.NEXT_PUBLIC_LIFI_DIAMOND || '0x0000000000000000000000000000000000000000',
@@ -14,12 +13,6 @@ export const CONTRACT_ADDRESSES = {
 
 // Chain Configuration
 export const CHAIN_CONFIG = {
-    arc: {
-        id: 42069, // Arc testnet chain ID (example)
-        name: 'Arc Testnet',
-        rpcUrl: process.env.NEXT_PUBLIC_ARC_RPC || 'https://rpc.testnet.arc.io',
-        blockExplorer: 'https://explorer.testnet.arc.io',
-    },
 } as const;
 
 // Supported chains for gas credits
