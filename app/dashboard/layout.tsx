@@ -1,6 +1,6 @@
 "use client";
 
-import { Navbar } from "../../components/Navbar";
+import { Navbar } from "../../components/layout/Navbar";
 import { GasTicker } from "../../components/GasTicker";
 
 export default function DashboardLayout({
