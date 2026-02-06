@@ -1,7 +1,5 @@
 "use client";
 
-import { Navbar } from "../components/layout/Navbar";
-import { Footer } from "../components/layout/Footer";
 import { GasTicker } from "../components/GasTicker";
 import { ArrowRight, Shield, Zap, TrendingDown, Clock, Wallet, BarChart3, ArrowUpRight, CheckCircle } from "lucide-react";
 import Link from "next/link";
@@ -10,8 +8,6 @@ import { Typography } from "@/components/ui/Typography";
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      <Navbar />
-
       {/* Gas Price Ticker */}
       <div className="pt-24">
         <GasTicker />
@@ -279,9 +275,6 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
-
-      {/* Footer */}
-      <Footer />
     </main>
   );
 }

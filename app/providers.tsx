@@ -22,18 +22,28 @@ const config = createConfig({
 export function Providers({ children }: { children: React.ReactNode }) {
     const [queryClient] = useState(() => new QueryClient());
 
+    const customTheme = {
+        ...darkTheme({
+            accentColor: "#A77979",
+            accentColorForeground: "white",
+            borderRadius: "large",
+            fontStack: "system" as const,
+            overlayBlur: "small" as const,
+        }),
+        colors: {
+            ...darkTheme().colors,
+            accentColor: "#A77979",
+            modalBackground: "#472D2D",
+            profileForeground: "#553939",
+            modalBorder: "#704F4F",
+            connectButtonBackground: "#553939",
+        },
+    };
+
     return (
         <WagmiProvider config={config}>
             <QueryClientProvider client={queryClient}>
-                <RainbowKitProvider
-                    theme={darkTheme({
-                        accentColor: "#6366f1",
-                        accentColorForeground: "white",
-                        borderRadius: "medium",
-                        fontStack: "system",
-                        overlayBlur: "small",
-                    })}
-                >
+                <RainbowKitProvider theme={customTheme} modalSize="compact">
                     {children}
                 </RainbowKitProvider>
             </QueryClientProvider>
