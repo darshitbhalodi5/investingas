@@ -24,19 +24,20 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
     const customTheme = {
         ...darkTheme({
-            accentColor: "#A77979",
-            accentColorForeground: "white",
+            accentColor: "#D5CEA3",
+            accentColorForeground: "#1A120B",
             borderRadius: "large",
             fontStack: "system" as const,
             overlayBlur: "small" as const,
         }),
         colors: {
             ...darkTheme().colors,
-            accentColor: "#A77979",
-            modalBackground: "#472D2D",
-            profileForeground: "#553939",
-            modalBorder: "#704F4F",
-            connectButtonBackground: "#553939",
+            accentColor: "#D5CEA3",
+            modalBackground: "#1A120B",
+            profileForeground: "#1A120B",
+            modalBorder: "#3C2A21",
+            connectButtonBackground: "#D5CEA3",
+            connectButtonText: "#1A120B",
         },
     };
 

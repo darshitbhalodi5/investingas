@@ -8,6 +8,8 @@ import logoImage from "@/assets/InvestInGas.svg";
 import { useState } from "react";
 import { Typography } from "@/components/ui/Typography";
 import { Button } from "@/components/ui/Button";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
     { label: "Dashboard", href: "/dashboard" },
@@ -18,10 +20,11 @@ const NAV_ITEMS = [
 
 export function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
 
     return (
         <>
-            <nav className="sticky top-0 z-50 w-full h-16 md:h-20 bg-[#472D2D]/80 backdrop-blur-xl border-b border-[#704F4F]/20 shadow-lg flex items-center transition-all duration-300">
+            <nav className="sticky top-0 z-50 w-full h-16 md:h-20 bg-background backdrop-blur-xl shadow-[inset_0_-1px_0_rgba(213,206,163,0.1)] flex items-center transition-all duration-300">
                 <div className="w-full">
                     <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
                         {/* Logo */}
@@ -41,17 +44,36 @@ export function Navbar() {
 
                         {/* Desktop Navigation */}
                         <div className="hidden lg:flex items-center gap-0.5 xl:gap-1">
-                            {NAV_ITEMS.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className="px-3 py-2 xl:px-4 hover:bg-white/5 transition-all rounded-lg"
-                                >
-                                    <Typography variant="body" className="text-white/70 hover:text-white font-medium">
-                                        {item.label}
-                                    </Typography>
-                                </Link>
-                            ))}
+                            {NAV_ITEMS.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={cn(
+                                            "px-3 py-2 xl:px-4 transition-all rounded-lg relative group border border-transparent",
+                                            isActive
+                                                ? "bg-secondary border-[#D5CEA3]/20 shadow-[0_0_15px_rgba(213,206,163,0.1)]"
+                                                : "hover:bg-secondary hover:border-[#D5CEA3]/10"
+                                        )}
+                                    >
+                                        <Typography
+                                            variant="body"
+                                            className={cn(
+                                                "transition-colors font-medium relative z-10",
+                                                isActive ? "text-primary" : "text-foreground/70 group-hover:text-primary"
+                                            )}
+                                        >
+                                            {item.label}
+                                        </Typography>
+
+                                        {/* Active Route Indicator Dot */}
+                                        {isActive && (
+                                            <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_#D5CEA3] animate-pulse" />
+                                        )}
+                                    </Link>
+                                );
+                            })}
                         </div>
 
                         <div className="flex items-center gap-2 xs:gap-3 sm:gap-4">
@@ -92,13 +114,13 @@ export function Navbar() {
                                                             <>
                                                                 <Button
                                                                     onClick={openConnectModal}
-                                                                    className="hidden lg:flex px-4 py-2 bg-[#A77979] text-white font-bold rounded-lg hover:bg-[#a77979]/80 transition-colors"
+                                                                    className="hidden lg:flex px-4 py-2 bg-primary text-primary-foreground font-bold rounded-lg hover:bg-primary/90 hover:shadow-[0_0_15px_rgba(213,206,163,0.3)] transition-all"
                                                                 >
                                                                     Connect Wallet
                                                                 </Button>
                                                                 <Button
                                                                     onClick={openConnectModal}
-                                                                    className="lg:hidden p-2 text-white/70 hover:text-white transition-colors bg-[#A77979] rounded-lg"
+                                                                    className="lg:hidden p-2 text-primary-foreground hover:shadow-[0_0_15px_rgba(213,206,163,0.3)] transition-all bg-primary rounded-lg"
                                                                     aria-label="Connect Wallet"
                                                                 >
                                                                     <IoWallet className="w-5 h-5 xs:w-6 xs:h-6" />
@@ -109,7 +131,7 @@ export function Navbar() {
 
                                                     if (chain.unsupported) {
                                                         return (
-                                                            <Button onClick={openChainModal} className="px-3 py-1.5 bg-red-500 text-white rounded-lg font-medium text-sm">
+                                                            <Button onClick={openChainModal} className="px-3 py-1.5 bg-red-500 text-foreground rounded-lg font-medium text-sm">
                                                                 Wrong network
                                                             </Button>
                                                         );
@@ -119,7 +141,7 @@ export function Navbar() {
                                                         <div className="hidden lg:flex items-center gap-3">
                                                             <Button
                                                                 onClick={openChainModal}
-                                                                className="flex items-center gap-1 bg-[#A77979] hover:bg-[#a77979]/80 p-1.5 rounded-lg transition-colors"
+                                                                className="flex items-center gap-1 bg-primary hover:bg-primary/80 p-1.5 rounded-lg transition-colors text-foreground"
                                                             >
                                                                 {chain.hasIcon && (
                                                                     <div
@@ -144,7 +166,7 @@ export function Navbar() {
 
                                                             <Button
                                                                 onClick={openAccountModal}
-                                                                className="flex items-center gap-2 bg-[#A77979] hover:bg-[#a77979]/80 px-2 py-1.5 rounded-lg transition-colors"
+                                                                className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_15px_rgba(213,206,163,0.3)] px-3 py-1.5 rounded-lg transition-all font-medium"
                                                             >
                                                                 {account.displayName}
                                                                 {account.displayBalance
@@ -162,7 +184,7 @@ export function Navbar() {
 
                             {/* Mobile Menu Toggle */}
                             <Button
-                                className="lg:hidden p-2 text-white/70 hover:text-white transition-colors"
+                                className="lg:hidden p-2 text-foreground/70 hover:text-primary hover:bg-secondary transition-colors rounded-lg"
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                             >
@@ -183,13 +205,13 @@ export function Navbar() {
                     />
 
                     {/* Modal Content */}
-                    <div className="relative w-full max-w-xs bg-[#472D2D]/90 backdrop-blur-xl border border-[#704F4F]/30 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+                    <div className="relative w-full max-w-xs bg-background/90 backdrop-blur-xl border border-border/30 rounded-2xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
                         {/* Header with Close */}
-                        <div className="flex items-center justify-between p-4 border-b border-white/10">
-                            <Typography variant="h4" className="text-white font-bold ml-2 font-serif">Menu</Typography>
+                        <div className="flex items-center justify-between p-4 border-b border-foreground/10">
+                            <Typography variant="h4" className="text-foreground font-bold ml-2 font-serif">Menu</Typography>
                             <Button
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="p-2 text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                                className="p-1.5 bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg shadow-lg transition-all"
                             >
                                 <IoClose className="w-6 h-6" />
                             </Button>
@@ -197,21 +219,35 @@ export function Navbar() {
 
                         {/* Menu Items */}
                         <div className="flex flex-col p-4 gap-2">
-                            {NAV_ITEMS.map((item) => (
-                                <Link
-                                    key={item.href}
-                                    href={item.href}
-                                    className="px-4 py-3 hover:bg-white/5 transition-all rounded-xl text-center"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                >
-                                    <Typography variant="body" className="text-white/80 hover:text-white font-medium text-lg">
-                                        {item.label}
-                                    </Typography>
-                                </Link>
-                            ))}
+                            {NAV_ITEMS.map((item) => {
+                                const isActive = pathname === item.href;
+                                return (
+                                    <Link
+                                        key={item.href}
+                                        href={item.href}
+                                        className={cn(
+                                            "px-4 py-3 transition-all rounded-xl text-center border border-transparent",
+                                            isActive
+                                                ? "bg-secondary border-[#D5CEA3]/20 shadow-[0_0_15px_rgba(213,206,163,0.1)]"
+                                                : "hover:bg-secondary hover:border-[#D5CEA3]/20 hover:shadow-[0_0_15px_rgba(213,206,163,0.15)]"
+                                        )}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <Typography
+                                            variant="body"
+                                            className={cn(
+                                                "font-medium text-lg transition-colors",
+                                                isActive ? "text-primary" : "text-foreground/80 hover:text-primary"
+                                            )}
+                                        >
+                                            {item.label}
+                                        </Typography>
+                                    </Link>
+                                );
+                            })}
 
                             {/* Wallet Logic in Menu */}
-                            <div className="mt-4 pt-4 border-t border-white/10 flex justify-center">
+                            <div className="mt-4 pt-4 border-t border-foreground/10 flex justify-center">
                                 <ConnectButton />
                             </div>
                         </div>

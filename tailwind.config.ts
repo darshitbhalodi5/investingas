@@ -7,6 +7,18 @@ export default {
     ],
     theme: {
         extend: {
+            colors: {
+                background: "var(--background)",
+                foreground: "var(--foreground)",
+                primary: {
+                    DEFAULT: "var(--primary)",
+                    foreground: "var(--primary-foreground)",
+                },
+                secondary: "var(--secondary)",
+                accent: "var(--accent)",
+                card: "var(--card)",
+                border: "var(--border)",
+            },
             screens: {
                 xs: "375px",
                 sm: "640px",

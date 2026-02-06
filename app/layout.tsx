@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark h-full">
-      <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans bg-[#472D2D] text-white min-h-screen min-h-dvh flex flex-col`}>
+      <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans bg-background text-foreground min-h-screen min-h-dvh flex flex-col`}>
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Navbar />
