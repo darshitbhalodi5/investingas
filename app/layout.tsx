@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { BioRhyme, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -31,10 +33,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans`}>
+    <html lang="en" className="dark h-full">
+      <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans bg-[#472D2D] text-white min-h-screen min-h-dvh flex flex-col`}>
         <Providers>
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            {children}
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>

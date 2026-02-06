@@ -1,27 +1,32 @@
-import { Zap } from "lucide-react";
+import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
+import { ImFire } from "react-icons/im";
 import { Typography } from "@/components/ui/Typography";
 
 export function Footer() {
     return (
-        <footer className="border-t border-white/5 py-12 bg-black/50">
-            <div className="container mx-auto px-6">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-500">
-                            <Zap className="w-4 h-4 text-white" />
-                        </div>
-                        <Typography variant="bodyLarge" className="font-bold">InvestingAs</Typography>
-                    </div>
-                    <div className="flex items-center gap-8 text-sm text-white/40">
-                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Docs</Typography></a>
-                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">GitHub</Typography></a>
-                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Twitter</Typography></a>
-                        <a href="#" className="hover:text-white transition"><Typography variant="bodySmall">Discord</Typography></a>
-                    </div>
-                    <Typography variant="bodySmall" className="text-white/30">
-                        © 2026 InvestingAs. All rights reserved.
-                    </Typography>
-                </div>
+        <footer className="w-full bg-[#472D2D]/80 backdrop-blur-xl border-t border-[#704F4F]/20 h-16 md:h-20 shrink-0 flex items-center">
+            <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+                {/* Gas Icon (Left) */}
+                <Link href="/" className="group icon-btn-glass">
+                    <ImFire className="w-5 h-5 md:w-6 md:h-6 text-white/70 group-hover:text-[#FFB547] transition-colors" />
+                </Link>
+
+                {/* Copyright (Center) */}
+                <Typography variant="caption" className="text-white/70 font-medium text-center text-xs md:text-sm">
+                    © 2026 InvestInGas. All rights reserved.
+                </Typography>
+
+                {/* GitHub Link (Right) */}
+                <Link
+                    href="https://github.com/orgs/InvestInGas/repositories"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group icon-btn-glass"
+                    aria-label="GitHub"
+                >
+                    <FaGithub className="w-5 h-5 md:w-6 md:h-6 text-white/50 group-hover:text-white transition-colors" />
+                </Link>
             </div>
         </footer>
     );
