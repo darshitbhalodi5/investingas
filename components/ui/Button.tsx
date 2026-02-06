@@ -3,15 +3,16 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center rounded-lg xs:rounded-xl text-xs xs:text-sm font-semibold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A77979] focus-visible:ring-offset-2 focus-visible:ring-offset-[#472D2D]",
+    "inline-flex items-center justify-center rounded-lg xs:rounded-xl text-xs xs:text-sm font-semibold transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     {
         variants: {
             variant: {
-                primary: "bg-[#A77979] text-white shadow-lg shadow-[#A77979]/20 hover:bg-[#A77979]/90",
-                secondary: "bg-[#553939] text-white border border-[#704F4F] hover:bg-[#704F4F] shadow-xl",
-                outline: "bg-transparent border border-[#704F4F] text-white/90 hover:bg-[#553939]/50",
-                ghost: "bg-transparent text-white/70 hover:bg-[#A77979]/10 hover:text-white",
-                link: "bg-transparent text-[#A77979] underline-offset-4 hover:underline",
+                primary: "bg-primary text-primary-foreground shadow-[0_0_20px_rgba(213,206,163,0.15)] hover:shadow-[0_0_25px_rgba(213,206,163,0.3)] hover:bg-primary/95 hover:-translate-y-0.5",
+                secondary: "bg-secondary text-primary border border-primary/10 hover:border-primary/30 hover:bg-secondary/80",
+                outline: "bg-transparent border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground shadow-sm",
+                ghost: "bg-transparent text-foreground hover:bg-secondary/40 hover:text-primary",
+                link: "bg-transparent text-primary underline-offset-4 hover:underline",
+                premium: "bg-gradient-to-r from-[#D5CEA3] via-[#E5E5CB] to-[#D5CEA3] bg-[length:200%_auto] hover:bg-right text-primary-foreground shadow-[0_0_20px_rgba(213,206,163,0.2)] hover:shadow-[0_0_30px_rgba(213,206,163,0.4)] hover:-translate-y-0.5 transition-all duration-500",
             },
             size: {
                 default: "h-10 px-4 py-2 xs:h-11 xs:px-5 sm:h-12 sm:px-6 sm:py-3",
