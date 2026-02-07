@@ -8,12 +8,10 @@ import { ArchitectureSection } from "@/components/home/ArchitectureSection";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { SavingsPreview } from "@/components/home/SavingsPreview";
 import { HeroSection } from "@/components/home/HeroSection";
-import { GasTicker } from "../GasTicker";
 
 export default function HomeWrapper() {
     return (
         <main className="min-h-screen">
-            <GasTicker />
             <HeroSection />
             <SavingsPreview />
             <HowItWorks />

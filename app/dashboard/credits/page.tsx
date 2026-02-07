@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Fuel, Clock, ArrowRight, Send, AlertTriangle, Loader2, CheckCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useUserCredits, useRedeemCredits, useTransferCredits, useCalculateSavings, GasCredit } from "@/hooks/useGasFutures";
 import { useAllGasPrices } from "@/hooks/useGasPrices";
 import { CROSS_CHAIN_OPTIONS, getMockLifiQuote, formatLifiEstimate } from "@/lib/lifi";
+import { ConnectWalletPrompt } from "@/components/dashboard/ConnectWalletPrompt";
+import { RiGasStationLine } from "react-icons/ri";
 
 // Chain colors mapping
 const chainColors: Record<string, string> = {
@@ -56,16 +57,11 @@ export default function CreditsPage() {
 
     if (!isConnected) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl">
-                    <Fuel className="w-10 h-10 text-indigo-400" />
-                </div>
-                <h1 className="text-3xl font-bold mb-4">Connect to View Credits</h1>
-                <p className="text-white/60 mb-8 max-w-md">
-                    Connect your wallet to view and manage your gas credits.
-                </p>
-                <ConnectButton />
-            </div>
+            <ConnectWalletPrompt
+                title="Connect to View Credits"
+                description="Connect your wallet to view and manage your gas credits."
+                icon={RiGasStationLine}
+            />
         );
     }
 

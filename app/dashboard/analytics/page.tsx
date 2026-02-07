@@ -1,8 +1,9 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { BarChart3, TrendingUp, Clock, DollarSign, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { ConnectWalletPrompt } from "@/components/dashboard/ConnectWalletPrompt";
+import { RiBarChartGroupedLine } from "react-icons/ri";
 
 // Mock analytics data
 const SAVINGS_HISTORY = [
@@ -25,16 +26,11 @@ export default function AnalyticsPage() {
 
     if (!isConnected) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl">
-                    <BarChart3 className="w-10 h-10 text-indigo-400" />
-                </div>
-                <h1 className="text-3xl font-bold mb-4">Connect to View Analytics</h1>
-                <p className="text-white/60 mb-8 max-w-md">
-                    Connect your wallet to view your gas savings analytics and history.
-                </p>
-                <ConnectButton />
-            </div>
+            <ConnectWalletPrompt
+                title="Connect to View Analytics"
+                description="Connect your wallet to view your gas savings analytics and history."
+                icon={RiBarChartGroupedLine}
+            />
         );
     }
 

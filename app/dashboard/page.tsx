@@ -1,11 +1,12 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Wallet, TrendingUp, Clock, ArrowRight, Fuel, Zap, Shield, Loader2 } from "lucide-react";
+import { TrendingUp, Clock, ArrowRight, Fuel, Zap, Shield, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useUserCredits, useUserStats } from "@/hooks/useGasFutures";
 import { useAllGasPrices } from "@/hooks/useGasPrices";
+import { ConnectWalletPrompt } from "@/components/dashboard/ConnectWalletPrompt";
+import { RiWallet3Line } from "react-icons/ri";
 
 // Chain colors mapping
 const chainColors: Record<string, string> = {
@@ -26,16 +27,11 @@ export default function DashboardPage() {
 
     if (!isConnected) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl">
-                    <Wallet className="w-10 h-10 text-indigo-400" />
-                </div>
-                <h1 className="text-3xl font-bold mb-4">Connect Your Wallet</h1>
-                <p className="text-white/60 mb-8 max-w-md">
-                    Connect your wallet to view your gas credits, track savings, and buy new credits.
-                </p>
-                <ConnectButton />
-            </div>
+            <ConnectWalletPrompt
+                title="Connect Your Wallet"
+                description="Connect your wallet to view your gas credits, track savings, and buy new credits."
+                icon={RiWallet3Line}
+            />
         );
     }
 

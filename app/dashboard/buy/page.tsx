@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Fuel, AlertCircle, CheckCircle, ArrowRight, Info, Loader2 } from "lucide-react";
 import { usePurchaseCredits, useUSDCBalance } from "@/hooks/useGasFutures";
 import { useAllGasPrices, useGasUnitsCalculator } from "@/hooks/useGasPrices";
+import { ConnectWalletPrompt } from "@/components/dashboard/ConnectWalletPrompt";
+import { RiGasStationLine } from "react-icons/ri";
+
+const MIN_PURCHASE_AMOUNT = 1;
 
 export default function BuyCreditsPage() {
     const { isConnected } = useAccount();
@@ -38,7 +41,7 @@ export default function BuyCreditsPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!isConnected || usdcAmount < 10 || hasInsufficientBalance) return;
+        if (!isConnected || usdcAmount < MIN_PURCHASE_AMOUNT || hasInsufficientBalance) return;
 
         try {
             await purchaseCredits(amount, selectedChain, expiry);
@@ -49,16 +52,11 @@ export default function BuyCreditsPage() {
 
     if (!isConnected) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-                <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-6 bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl">
-                    <Fuel className="w-10 h-10 text-indigo-400" />
-                </div>
-                <h1 className="text-3xl font-bold mb-4">Connect to Buy Credits</h1>
-                <p className="text-white/60 mb-8 max-w-md">
-                    Connect your wallet to purchase gas credits at today&apos;s prices.
-                </p>
-                <ConnectButton />
-            </div>
+            <ConnectWalletPrompt
+                title="Connect to Buy Credits"
+                description="Connect your wallet to purchase gas credits at today's prices."
+                icon={RiGasStationLine}
+            />
         );
     }
 
@@ -152,7 +150,7 @@ export default function BuyCreditsPage() {
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="Enter amount"
-                            min="10"
+                            min={MIN_PURCHASE_AMOUNT}
                             max="10000"
                             className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-xl font-medium focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all placeholder:text-white/20"
                         />
@@ -172,13 +170,13 @@ export default function BuyCreditsPage() {
                             </button>
                         ))}
                     </div>
-                    {usdcAmount > 0 && usdcAmount < 10 && (
+                    {usdcAmount > 0 && usdcAmount < MIN_PURCHASE_AMOUNT && (
                         <p className="mt-3 text-sm text-amber-500 flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" />
-                            Minimum purchase is $10
+                            Minimum purchase is ${MIN_PURCHASE_AMOUNT}
                         </p>
                     )}
-                    {hasInsufficientBalance && usdcAmount >= 10 && (
+                    {hasInsufficientBalance && usdcAmount >= MIN_PURCHASE_AMOUNT && (
                         <p className="mt-3 text-sm text-red-500 flex items-center gap-2">
                             <AlertCircle className="w-4 h-4" />
                             Insufficient USDC balance
@@ -209,7 +207,7 @@ export default function BuyCreditsPage() {
                 </div>
 
                 {/* Summary */}
-                {usdcAmount >= 10 && (
+                {usdcAmount >= MIN_PURCHASE_AMOUNT && (
                     <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-6 rounded-2xl">
                         <h3 className="font-semibold mb-4 text-lg">Order Summary</h3>
                         <div className="space-y-3 text-sm">
@@ -258,7 +256,7 @@ export default function BuyCreditsPage() {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    disabled={usdcAmount < 10 || isPending || hasInsufficientBalance}
+                    disabled={usdcAmount < MIN_PURCHASE_AMOUNT || isPending || hasInsufficientBalance}
                     className="w-full py-4 text-lg font-bold rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-indigo-500/25 flex items-center justify-center gap-2"
                 >
                     {isPending ? (

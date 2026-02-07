@@ -1,6 +1,6 @@
 /**
  * useGasFutures Hook
- * React hooks for interacting with the ArcGasFutures contract
+ * React hooks for interacting with the contract
  */
 
 'use client';
@@ -8,7 +8,7 @@
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useSignTypedData } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import { useState, useEffect } from 'react';
-import { CONTRACT_ADDRESSES, INVEST_IN_GAS_HOOK_ABI, ERC20_ABI, EIP712_DOMAIN, PURCHASE_TYPE, REDEEM_TYPE } from '@/lib/contracts';
+import { CONTRACT_ADDRESSES, ERC20_ABI, EIP712_DOMAIN, PURCHASE_TYPE, REDEEM_TYPE } from '@/lib/contracts';
 import { api } from '@/lib/api';
 
 // Types
@@ -53,7 +53,7 @@ function formatCredit(position: any): GasCredit {
 }
 
 /**
- * Hook to fetch user's gas credits (from Relayer API)
+ * Hook to fetch user's gas credits
  */
 export function useUserCredits() {
     const { address } = useAccount();
@@ -102,7 +102,7 @@ export function useUserStats() {
 }
 
 /**
- * Hook to purchase gas credits (via Relayer)
+ * Hook to purchase gas credits
  */
 export function usePurchaseCredits() {
     const { address } = useAccount();
@@ -202,7 +202,7 @@ export function usePurchaseCredits() {
 }
 
 /**
- * Hook to redeem gas credits (via Relayer)
+ * Hook to redeem gas credits
  */
 export function useRedeemCredits() {
     const { address } = useAccount();

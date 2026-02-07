@@ -1,12 +1,12 @@
 /**
  * useGasPrices Hook
- * Fetch live gas prices - can use contract data or mock for development
+ * Fetch live gas prices
  */
 
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { CONTRACT_ADDRESSES, SUPPORTED_CHAINS } from '@/lib/contracts';
+import { SUPPORTED_CHAINS } from '@/lib/contracts';
 import { api } from '@/lib/api';
 
 export interface GasPriceData {
@@ -36,20 +36,17 @@ const MOCK_PRICES: Record<string, GasPriceData> = {
 export function useAllGasPrices() {
     const [prices, setPrices] = useState<GasPriceData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
 
     const fetchPrices = useCallback(async () => {
         try {
-            // Attempt to fetch from API
             const data = await api.getGlobalGasPrices();
             if (data && data.gasPrices && data.gasPrices.length > 0) {
-                // Transform API data to GasPriceData
                 const mappedPrices = data.gasPrices.map((p: any) => ({
                     chain: p.chain,
                     chainName: SUPPORTED_CHAINS.find(c => c.id === p.chain)?.name || p.chain,
                     priceGwei: p.price, // API returns Gwei
-                    volatility24h: 0, // Not yet in v2 API?
-                    high24h: p.price * 1.2, // Mocking stats for now
+                    volatility24h: 0,
+                    high24h: p.price * 1.2,
                     low24h: p.price * 0.8,
                     lastUpdated: new Date(p.timestamp),
                     change24h: 0,
@@ -57,11 +54,9 @@ export function useAllGasPrices() {
                 }));
                 setPrices(mappedPrices);
             } else {
-                // Fallback to mock
                 useMockData();
             }
         } catch (err) {
-            // Fallback to mock on error
             console.warn('Failed to fetch prices from API, using mock data');
             useMockData();
         } finally {
@@ -80,7 +75,7 @@ export function useAllGasPrices() {
 
     useEffect(() => {
         fetchPrices();
-        const interval = setInterval(fetchPrices, 10000); // 10s refresh
+        const interval = setInterval(fetchPrices, 270000); // 4.5min refresh
         return () => clearInterval(interval);
     }, [fetchPrices]);
 

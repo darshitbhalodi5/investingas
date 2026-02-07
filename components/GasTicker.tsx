@@ -1,40 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { TrendingDown, TrendingUp, Minus } from "lucide-react";
+import { useAllGasPrices } from "@/hooks/useGasPrices";
 
-interface GasPrice {
-    chain: string;
-    price: number;
-    change24h: number;
-    color: string;
-}
-
-const MOCK_GAS_PRICES: GasPrice[] = [
-    { chain: "Sepolia", price: 2, change24h: -15, color: "#627eea" },
-    { chain: "Base Sepolia", price: 0.1, change24h: 5, color: "#0052ff" },
-    { chain: "Arbitrum Sepolia", price: 0.1, change24h: -8, color: "#28a0f0" },
-    { chain: "Optimism Sepolia", price: 0.1, change24h: 0, color: "#ff0420" },
-    { chain: "Polygon Amoy", price: 15, change24h: 22, color: "#8247e5" },
-];
+const CHAIN_COLORS: Record<string, string> = {
+    ethereum: "#627eea",
+    base: "#0052ff",
+    arbitrum: "#28a0f0",
+    polygon: "#8247e5",
+    optimism: "#ff0420",
+};
 
 export function GasTicker() {
-    const [prices, setPrices] = useState<GasPrice[]>(MOCK_GAS_PRICES);
+    const { prices, isLoading } = useAllGasPrices();
 
-    // Simulate real-time updates
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setPrices(prev =>
-                prev.map(p => ({
-                    ...p,
-                    price: Math.max(0.01, p.price + (Math.random() - 0.5) * (p.price * 0.05)),
-                    change24h: p.change24h + (Math.random() - 0.5) * 2,
-                }))
-            );
-        }, 3000);
-
-        return () => clearInterval(interval);
-    }, []);
+    if (isLoading && (!prices || prices.length === 0)) {
+        return (
+            <div className="py-3 border-y border-white/5 bg-black/30 backdrop-blur-sm h-[45px] animate-pulse" />
+        );
+    }
 
     return (
         <div className="overflow-hidden py-3 border-y border-white/5 bg-black/30 backdrop-blur-sm">
@@ -43,10 +27,10 @@ export function GasTicker() {
                     <div key={idx} className="flex items-center gap-3 shrink-0">
                         <div
                             className="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(255,255,255,0.3)]"
-                            style={{ backgroundColor: gas.color }}
+                            style={{ backgroundColor: CHAIN_COLORS[gas.chain] || "#ffffff" }}
                         />
-                        <span className="text-sm font-medium text-white/70">{gas.chain}</span>
-                        <span className="text-sm font-bold">{gas.price.toFixed(2)} gwei</span>
+                        <span className="text-sm font-medium text-white/70">{gas.chainName}</span>
+                        <span className="text-sm font-bold">{gas.priceGwei.toFixed(2)} gwei</span>
                         <span
                             className={`flex items-center gap-1 text-xs ${gas.change24h > 0 ? "text-red-400" :
                                 gas.change24h < 0 ? "text-green-400" :
