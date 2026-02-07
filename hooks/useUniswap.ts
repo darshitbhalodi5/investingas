@@ -47,7 +47,7 @@ export const POOL_CONFIG = {
 
 // Supported trading pairs
 export const TRADING_PAIRS = [
-    { id: 'eth-gas', name: 'ETH Gas Credits', symbol: 'gETH', chain: 'ethereum', color: '#627eea' },
+    { id: 'eth-gas', name: 'ETH Gas Credits', symbol: 'gETH', chain: 'sepolia', color: '#627eea' },
     { id: 'base-gas', name: 'Base Gas Credits', symbol: 'gBASE', chain: 'base', color: '#0052ff' },
     { id: 'arb-gas', name: 'Arbitrum Gas Credits', symbol: 'gARB', chain: 'arbitrum', color: '#28a0f0' },
     { id: 'poly-gas', name: 'Polygon Gas Credits', symbol: 'gPOLY', chain: 'polygon', color: '#8247e5' },

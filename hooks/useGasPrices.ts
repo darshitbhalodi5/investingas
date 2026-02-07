@@ -23,11 +23,11 @@ export interface GasPriceData {
 
 // Mock data for development (fallback)
 const MOCK_PRICES: Record<string, GasPriceData> = {
-    ethereum: { chain: 'ethereum', chainName: 'Sepolia', priceGwei: 2, volatility24h: 8, high24h: 5, low24h: 1, lastUpdated: new Date(), change24h: -12, isBuySignal: true },
+    sepolia: { chain: 'sepolia', chainName: 'Sepolia', priceGwei: 2, volatility24h: 8, high24h: 5, low24h: 1, lastUpdated: new Date(), change24h: -12, isBuySignal: true },
     base: { chain: 'base', chainName: 'Base Sepolia', priceGwei: 0.1, volatility24h: 0, high24h: 0.2, low24h: 0.1, lastUpdated: new Date(), change24h: 0, isBuySignal: false },
+    polygon: { chain: 'polygon', chainName: 'Polygon Amoy', priceGwei: 15, volatility24h: 15, high24h: 30, low24h: 5, lastUpdated: new Date(), change24h: 8, isBuySignal: false },
     arbitrum: { chain: 'arbitrum', chainName: 'Arbitrum Sepolia', priceGwei: 0.1, volatility24h: 0, high24h: 0.5, low24h: 0.1, lastUpdated: new Date(), change24h: -5, isBuySignal: true },
     optimism: { chain: 'optimism', chainName: 'Optimism Sepolia', priceGwei: 0.1, volatility24h: 0, high24h: 0.5, low24h: 0.1, lastUpdated: new Date(), change24h: -2, isBuySignal: true },
-    polygon: { chain: 'polygon', chainName: 'Polygon Amoy', priceGwei: 15, volatility24h: 15, high24h: 30, low24h: 5, lastUpdated: new Date(), change24h: 8, isBuySignal: false },
 };
 
 /**

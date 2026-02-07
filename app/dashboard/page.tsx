@@ -10,7 +10,7 @@ import { RiWallet3Line } from "react-icons/ri";
 
 // Chain colors mapping
 const chainColors: Record<string, string> = {
-    "ethereum": "bg-[#627eea]",
+    "sepolia": "bg-[#627eea]",
     "base": "bg-[#0052ff]",
     "polygon": "bg-[#8247e5]",
     "arbitrum": "bg-[#28a0f0]",
@@ -58,7 +58,7 @@ export default function DashboardPage() {
                         Welcome back, {address?.slice(0, 6)}...{address?.slice(-4)}
                     </p>
                 </div>
-                <Link href="/dashboard/buy" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg hover:shadow-indigo-500/25">
+                <Link href="/dashboard/buy" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25">
                     <Fuel className="w-5 h-5" />
                     Buy Gas Credits
                 </Link>
@@ -89,8 +89,8 @@ export default function DashboardPage() {
                             <p className="text-white/60 text-sm mb-1">Active Credits</p>
                             <p className="text-3xl font-bold">{activeCredits}</p>
                         </div>
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-500/20">
-                            <Zap className="w-6 h-6 text-indigo-400" />
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/20">
+                            <Zap className="w-6 h-6 text-primary" />
                         </div>
                     </div>
                     <p className="text-white/40 text-sm mt-4">Across {uniqueChains} chain{uniqueChains !== 1 ? 's' : ''}</p>
@@ -118,14 +118,14 @@ export default function DashboardPage() {
             <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-6 rounded-2xl">
                 <div className="flex items-center justify-between mb-6">
                     <h2 className="text-xl font-semibold">Your Gas Credits</h2>
-                    <Link href="/dashboard/credits" className="text-indigo-400 text-sm flex items-center gap-1 hover:text-indigo-300 transition-colors">
+                    <Link href="/dashboard/credits" className="text-primary text-sm flex items-center gap-1 hover:text-primary/80 transition-colors">
                         View All <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>
 
                 {creditsLoading ? (
                     <div className="flex items-center justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
+                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
                     </div>
                 ) : credits.length === 0 ? (
                     <div className="text-center py-12">
@@ -133,7 +133,7 @@ export default function DashboardPage() {
                             <Fuel className="w-8 h-8 text-white/40" />
                         </div>
                         <p className="text-white/60 mb-4">No gas credits yet</p>
-                        <Link href="/dashboard/buy" className="text-indigo-400 hover:text-indigo-300">
+                        <Link href="/dashboard/buy" className="text-primary hover:text-primary/80">
                             Buy your first credits →
                         </Link>
                     </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                                         <Link
                                             href={`/dashboard/credits?redeem=${credit.id}`}
                                             className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${isGoodDeal
-                                                ? "bg-indigo-600 text-white hover:bg-indigo-500 shadow-md"
+                                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                                                 : "bg-white/5 text-white/40 border border-white/5"
                                                 }`}
                                         >
@@ -203,16 +203,16 @@ export default function DashboardPage() {
 
             {/* Quick Actions */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link href="/dashboard/buy" className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-6 rounded-2xl hover:bg-white/[0.05] hover:border-indigo-500/30 transition-all group">
+                <Link href="/dashboard/buy" className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-6 rounded-2xl hover:bg-white/[0.05] hover:border-primary/30 transition-all group">
                     <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-indigo-500/20 group-hover:scale-110 transition-transform">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-primary/20 group-hover:scale-110 transition-transform">
                             <Fuel className="w-6 h-6 text-white" />
                         </div>
                         <div>
                             <h3 className="font-semibold mb-1">Buy More Credits</h3>
                             <p className="text-sm text-white/40">Lock in today&apos;s low gas prices</p>
                         </div>
-                        <ArrowRight className="w-5 h-5 ml-auto text-white/40 group-hover:text-indigo-400 transition-colors" />
+                        <ArrowRight className="w-5 h-5 ml-auto text-white/40 group-hover:text-primary transition-colors" />
                     </div>
                 </Link>
 

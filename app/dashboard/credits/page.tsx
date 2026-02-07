@@ -12,7 +12,7 @@ import { RiGasStationLine } from "react-icons/ri";
 
 // Chain colors mapping
 const chainColors: Record<string, string> = {
-    "ethereum": "bg-[#627eea]",
+    "sepolia": "bg-[#627eea]",
     "base": "bg-[#0052ff]",
     "polygon": "bg-[#8247e5]",
     "arbitrum": "bg-[#28a0f0]",
@@ -109,7 +109,7 @@ export default function CreditsPage() {
                         Manage, redeem, and transfer your gas credits
                     </p>
                 </div>
-                <Link href="/dashboard/buy" className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg hover:shadow-indigo-500/25">
+                <Link href="/dashboard/buy" className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/25">
                     <Fuel className="w-5 h-5" />
                     Buy More Credits
                 </Link>
@@ -118,7 +118,7 @@ export default function CreditsPage() {
             {/* Credits Grid */}
             {creditsLoading ? (
                 <div className="flex items-center justify-center py-20">
-                    <Loader2 className="w-10 h-10 animate-spin text-indigo-400" />
+                    <Loader2 className="w-10 h-10 animate-spin text-primary" />
                 </div>
             ) : credits.length === 0 ? (
                 <div className="text-center py-16 bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl rounded-2xl">
@@ -127,7 +127,7 @@ export default function CreditsPage() {
                     <p className="text-white/60 mb-6">
                         You haven&apos;t purchased any gas credits yet.
                     </p>
-                    <Link href="/dashboard/buy" className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl transition-all font-semibold inline-flex">
+                    <Link href="/dashboard/buy" className="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl transition-all font-semibold inline-flex">
                         Buy Your First Credits
                     </Link>
                 </div>
@@ -206,7 +206,7 @@ export default function CreditsPage() {
                                             }}
                                             disabled={!isBeneficial}
                                             className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 ${isBeneficial
-                                                ? "bg-indigo-600 hover:bg-indigo-500 text-white shadow-md"
+                                                ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md"
                                                 : "bg-white/5 text-white/40 border border-white/5 cursor-not-allowed"
                                                 }`}
                                         >
@@ -245,7 +245,7 @@ export default function CreditsPage() {
                             <button
                                 onClick={() => setRedeemType("cash")}
                                 className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all ${redeemType === "cash"
-                                    ? "bg-indigo-600 text-white"
+                                    ? "bg-primary text-primary-foreground"
                                     : "bg-white/5 text-white/60 hover:bg-white/10"
                                     }`}
                             >
@@ -254,7 +254,7 @@ export default function CreditsPage() {
                             <button
                                 onClick={() => setRedeemType("crosschain")}
                                 className={`flex-1 py-3 rounded-xl text-sm font-medium transition-all ${redeemType === "crosschain"
-                                    ? "bg-indigo-600 text-white"
+                                    ? "bg-primary text-primary-foreground"
                                     : "bg-white/5 text-white/60 hover:bg-white/10"
                                     }`}
                             >
@@ -269,7 +269,7 @@ export default function CreditsPage() {
                                 type="text"
                                 value={redeemAmount}
                                 onChange={(e) => setRedeemAmount(e.target.value)}
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-primary outline-none transition-colors"
                             />
                             <p className="text-xs text-white/40 mt-1">
                                 Available: {formatGasUnits(selectedCredit.remainingGasUnits)}
@@ -286,7 +286,7 @@ export default function CreditsPage() {
                                             key={chain.chainId}
                                             onClick={() => setSelectedDestChain(chain.chainId)}
                                             className={`p-3 rounded-lg text-sm font-medium transition-all ${selectedDestChain === chain.chainId
-                                                ? "bg-indigo-600 text-white"
+                                                ? "bg-primary text-primary-foreground"
                                                 : "bg-white/5 text-white/60 hover:bg-white/10"
                                                 }`}
                                         >
@@ -318,7 +318,7 @@ export default function CreditsPage() {
                             <button
                                 onClick={handleRedeem}
                                 disabled={isRedeeming || !redeemAmount}
-                                className="flex-1 px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all font-medium flex items-center justify-center gap-2"
+                                className="flex-1 px-4 py-3 bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all font-medium flex items-center justify-center gap-2"
                             >
                                 {isRedeeming ? (
                                     <>
@@ -363,7 +363,7 @@ export default function CreditsPage() {
                                 placeholder="0x..."
                                 value={transferAddress}
                                 onChange={(e) => setTransferAddress(e.target.value)}
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-primary outline-none transition-colors"
                             />
                         </div>
 
@@ -373,7 +373,7 @@ export default function CreditsPage() {
                                 type="text"
                                 value={transferAmount}
                                 onChange={(e) => setTransferAmount(e.target.value)}
-                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-indigo-500 outline-none transition-colors"
+                                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-primary outline-none transition-colors"
                             />
                             <p className="text-xs text-white/40 mt-1">
                                 Available: {formatGasUnits(selectedCredit.remainingGasUnits)}
@@ -390,7 +390,7 @@ export default function CreditsPage() {
                             <button
                                 onClick={handleTransfer}
                                 disabled={isTransferring || !transferAddress.startsWith("0x") || !transferAmount}
-                                className="flex-1 px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all font-medium flex items-center justify-center gap-2"
+                                className="flex-1 px-4 py-3 bg-primary text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed rounded-xl transition-all font-medium flex items-center justify-center gap-2"
                             >
                                 {isTransferring ? (
                                     <>

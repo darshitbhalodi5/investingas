@@ -4,7 +4,7 @@ import { TrendingDown, TrendingUp, Minus } from "lucide-react";
 import { useAllGasPrices } from "@/hooks/useGasPrices";
 
 const CHAIN_COLORS: Record<string, string> = {
-    ethereum: "#627eea",
+    sepolia: "#627eea",
     base: "#0052ff",
     arbitrum: "#28a0f0",
     polygon: "#8247e5",
