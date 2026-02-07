@@ -168,7 +168,7 @@ export function usePurchaseCredits() {
             // 3. Submit to Relayer
             const result = await api.purchase({
                 user: address,
-                usdcAmount: usdcAmount,
+                usdcAmount: amount.toString(), // Send unit-adjusted value (6 decimals)
                 targetChain,
                 expiryDays,
                 userSignature: signature,

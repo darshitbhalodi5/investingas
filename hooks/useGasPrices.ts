@@ -44,11 +44,11 @@ export function useAllGasPrices() {
                 const mappedPrices = data.gasPrices.map((p: any) => ({
                     chain: p.chain,
                     chainName: SUPPORTED_CHAINS.find(c => c.id === p.chain)?.name || p.chain,
-                    priceGwei: p.price, // API returns Gwei
+                    priceGwei: Number(p.priceGwei || 0),
                     volatility24h: 0,
-                    high24h: p.price * 1.2,
-                    low24h: p.price * 0.8,
-                    lastUpdated: new Date(p.timestamp),
+                    high24h: Number(p.high24h || 0),
+                    low24h: Number(p.low24h || 0),
+                    lastUpdated: new Date(p.timestampMs || Date.now()),
                     change24h: 0,
                     isBuySignal: false,
                 }));

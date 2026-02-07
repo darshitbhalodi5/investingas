@@ -30,7 +30,7 @@ export function GasTicker() {
                             style={{ backgroundColor: CHAIN_COLORS[gas.chain] || "#ffffff" }}
                         />
                         <span className="text-sm font-medium text-white/70">{gas.chainName}</span>
-                        <span className="text-sm font-bold">{gas.priceGwei.toFixed(2)} gwei</span>
+                        <span className="text-sm font-bold">{(gas.priceGwei || 0).toFixed(2)} gwei</span>
                         <span
                             className={`flex items-center gap-1 text-xs ${gas.change24h > 0 ? "text-red-400" :
                                 gas.change24h < 0 ? "text-green-400" :
