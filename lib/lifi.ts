@@ -47,7 +47,7 @@ export interface LifiQuoteParams {
 const NATIVE_TOKEN = '0x0000000000000000000000000000000000000000';
 
 const CHAIN_CONFIGS: Record<number, { name: string; nativeSymbol: string }> = {
-    11155111: { name: 'Sepolia', nativeSymbol: 'ETH' },
+    11155111: { name: 'Ethereum', nativeSymbol: 'ETH' },
     84532: { name: 'Base Sepolia', nativeSymbol: 'ETH' },
     421614: { name: 'Arbitrum Sepolia', nativeSymbol: 'ETH' },
     11155420: { name: 'Optimism Sepolia', nativeSymbol: 'ETH' },
@@ -176,9 +176,9 @@ export function formatLifiEstimate(quote: LifiQuote) {
  * Chain options for cross-chain redemption
  */
 export const CROSS_CHAIN_OPTIONS = [
-    { chainId: 11155111, name: 'Sepolia', symbol: 'ETH', icon: '⟠' },
-    { chainId: 84532, name: 'Base Sepolia', symbol: 'ETH', icon: '🔵' },
-    { chainId: 421614, name: 'Arbitrum Sepolia', symbol: 'ETH', icon: '🔷' },
-    { chainId: 11155420, name: 'Optimism Sepolia', symbol: 'ETH', icon: '🔴' },
+    { chainId: 11155111, name: 'Ethereum', symbol: 'ETH', icon: '⟠' },
+    { chainId: 84532, name: 'Base', symbol: 'ETH', icon: '🔵' },
+    { chainId: 421614, name: 'Arbitrum', symbol: 'ETH', icon: '🔷' },
+    { chainId: 11155420, name: 'Optimism', symbol: 'ETH', icon: '🔴' },
     { chainId: 80002, name: 'Polygon Amoy', symbol: 'MATIC', icon: '🟣' },
 ];

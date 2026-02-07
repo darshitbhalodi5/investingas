@@ -15,7 +15,7 @@ const MIN_PURCHASE_AMOUNT = 1;
 export default function BuyCreditsComponent() {
     const { isConnected, chainId } = useAccount();
     const { switchChain } = useSwitchChain();
-    const [selectedChain, setSelectedChain] = useState("sepolia");
+    const [selectedChain, setSelectedChain] = useState("ethereum");
     const [amount, setAmount] = useState("");
     const [expiry, setExpiry] = useState(30);
     const [success, setSuccess] = useState(false);

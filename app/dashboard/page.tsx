@@ -10,7 +10,7 @@ import { RiWallet3Line } from "react-icons/ri";
 
 // Chain colors mapping
 const chainColors: Record<string, string> = {
-    "sepolia": "bg-[#627eea]",
+    "ethereum": "bg-[#627eea]",
     "base": "bg-[#0052ff]",
     "polygon": "bg-[#8247e5]",
     "arbitrum": "bg-[#28a0f0]",

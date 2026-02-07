@@ -18,11 +18,11 @@ import InvestInGasHook from '../artifacts/InvestInGasHook.json';
 
 // Supported chains for gas credits
 export const SUPPORTED_CHAINS = [
-    { id: 'sepolia', name: 'Sepolia', symbol: 'ETH', chainId: 11155111 },
-    { id: 'base', name: 'Base Sepolia', symbol: 'ETH', chainId: 84532 },
-    { id: 'arbitrum', name: 'Arbitrum Sepolia', symbol: 'ETH', chainId: 421614 },
-    { id: 'optimism', name: 'Optimism Sepolia', symbol: 'ETH', chainId: 11155420 },
-    { id: 'polygon', name: 'Polygon Amoy', symbol: 'MATIC', chainId: 80002 },
+    { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', chainId: 11155111 },
+    { id: 'base', name: 'Base', symbol: 'ETH', chainId: 84532 },
+    { id: 'arbitrum', name: 'Arbitrum', symbol: 'ETH', chainId: 421614 },
+    { id: 'optimism', name: 'Optimism', symbol: 'ETH', chainId: 11155420 },
+    { id: 'polygon', name: 'Polygon', symbol: 'MATIC', chainId: 80002 },
 ] as const;
 
 // InvestInGasHook ABI (Uniswap v4)
