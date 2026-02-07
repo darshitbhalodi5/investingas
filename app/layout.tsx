@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { GasTicker } from "@/components/GasTicker";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -18,8 +19,8 @@ const bioRhyme = BioRhyme({
 
 export const metadata: Metadata = {
   title: "InvestingAs | Buy Tomorrow's Gas at Today's Prices",
-  description: "Lock in current gas prices for future blockchain transactions. Save up to 90% on Ethereum, Base, Arbitrum, and Polygon gas fees.",
-  keywords: ["gas futures", "ethereum", "DeFi", "gas savings", "blockchain", "crypto"],
+  description: "Lock in current gas prices for future blockchain transactions. Save up to 90% on Sepolia, Base Sepolia, Arbitrum Sepolia, and Optimism Sepolia gas fees.",
+  keywords: ["gas futures", "ethereum", "sepolia", "DeFi", "gas savings", "blockchain", "crypto"],
   openGraph: {
     title: "InvestingAs - Gas Futures Marketplace",
     description: "Never overpay for gas again. Lock in today's prices for future transactions.",
@@ -38,6 +39,7 @@ export default function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-screen">
             <Navbar />
+            <GasTicker />
             {children}
             <Footer />
           </div>

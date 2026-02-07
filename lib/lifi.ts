@@ -47,11 +47,11 @@ export interface LifiQuoteParams {
 const NATIVE_TOKEN = '0x0000000000000000000000000000000000000000';
 
 const CHAIN_CONFIGS: Record<number, { name: string; nativeSymbol: string }> = {
-    1: { name: 'Ethereum', nativeSymbol: 'ETH' },
-    8453: { name: 'Base', nativeSymbol: 'ETH' },
-    42161: { name: 'Arbitrum', nativeSymbol: 'ETH' },
-    137: { name: 'Polygon', nativeSymbol: 'MATIC' },
-    10: { name: 'Optimism', nativeSymbol: 'ETH' },
+    11155111: { name: 'Sepolia', nativeSymbol: 'ETH' },
+    84532: { name: 'Base Sepolia', nativeSymbol: 'ETH' },
+    421614: { name: 'Arbitrum Sepolia', nativeSymbol: 'ETH' },
+    11155420: { name: 'Optimism Sepolia', nativeSymbol: 'ETH' },
+    80002: { name: 'Polygon Amoy', nativeSymbol: 'MATIC' },
 };
 
 /**
@@ -120,7 +120,7 @@ export function getMockLifiQuote(
     toChainId: number,
     usdcAmount: string
 ): LifiQuote {
-    const toConfig = CHAIN_CONFIGS[toChainId] || CHAIN_CONFIGS[1];
+    const toConfig = CHAIN_CONFIGS[toChainId] || CHAIN_CONFIGS[11155111];
     const amountNumber = parseFloat(usdcAmount);
 
     // Estimate: ~$3000/ETH, so $30 USDC ≈ 0.01 ETH
@@ -176,9 +176,9 @@ export function formatLifiEstimate(quote: LifiQuote) {
  * Chain options for cross-chain redemption
  */
 export const CROSS_CHAIN_OPTIONS = [
-    { chainId: 1, name: 'Ethereum', symbol: 'ETH', icon: '⟠' },
-    { chainId: 8453, name: 'Base', symbol: 'ETH', icon: '🔵' },
-    { chainId: 42161, name: 'Arbitrum', symbol: 'ETH', icon: '🔷' },
-    { chainId: 137, name: 'Polygon', symbol: 'MATIC', icon: '🟣' },
-    { chainId: 10, name: 'Optimism', symbol: 'ETH', icon: '🔴' },
+    { chainId: 11155111, name: 'Sepolia', symbol: 'ETH', icon: '⟠' },
+    { chainId: 84532, name: 'Base Sepolia', symbol: 'ETH', icon: '🔵' },
+    { chainId: 421614, name: 'Arbitrum Sepolia', symbol: 'ETH', icon: '🔷' },
+    { chainId: 11155420, name: 'Optimism Sepolia', symbol: 'ETH', icon: '🔴' },
+    { chainId: 80002, name: 'Polygon Amoy', symbol: 'MATIC', icon: '🟣' },
 ];

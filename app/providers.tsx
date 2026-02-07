@@ -2,20 +2,20 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider, createConfig, http } from "wagmi";
-import { mainnet, base, arbitrum, polygon, optimism } from "wagmi/chains";
+import { sepolia, baseSepolia, arbitrumSepolia, optimismSepolia, polygonAmoy } from "wagmi/chains";
 import { RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { useState } from "react";
 
 // Configure chains
 const config = createConfig({
-    chains: [mainnet, base, arbitrum, polygon, optimism],
+    chains: [sepolia, baseSepolia, arbitrumSepolia, optimismSepolia, polygonAmoy],
     transports: {
-        [mainnet.id]: http(),
-        [base.id]: http(),
-        [arbitrum.id]: http(),
-        [polygon.id]: http(),
-        [optimism.id]: http(),
+        [sepolia.id]: http(),
+        [baseSepolia.id]: http(),
+        [arbitrumSepolia.id]: http(),
+        [optimismSepolia.id]: http(),
+        [polygonAmoy.id]: http(),
     },
 });
 

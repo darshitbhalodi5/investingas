@@ -11,11 +11,11 @@ interface GasPrice {
 }
 
 const MOCK_GAS_PRICES: GasPrice[] = [
-    { chain: "Ethereum", price: 12, change24h: -15, color: "#627eea" },
-    { chain: "Base", price: 0.5, change24h: 5, color: "#0052ff" },
-    { chain: "Arbitrum", price: 0.1, change24h: -8, color: "#28a0f0" },
-    { chain: "Polygon", price: 45, change24h: 22, color: "#8247e5" },
-    { chain: "Optimism", price: 0.3, change24h: 0, color: "#ff0420" },
+    { chain: "Sepolia", price: 2, change24h: -15, color: "#627eea" },
+    { chain: "Base Sepolia", price: 0.1, change24h: 5, color: "#0052ff" },
+    { chain: "Arbitrum Sepolia", price: 0.1, change24h: -8, color: "#28a0f0" },
+    { chain: "Optimism Sepolia", price: 0.1, change24h: 0, color: "#ff0420" },
+    { chain: "Polygon Amoy", price: 15, change24h: 22, color: "#8247e5" },
 ];
 
 export function GasTicker() {
@@ -49,8 +49,8 @@ export function GasTicker() {
                         <span className="text-sm font-bold">{gas.price.toFixed(2)} gwei</span>
                         <span
                             className={`flex items-center gap-1 text-xs ${gas.change24h > 0 ? "text-red-400" :
-                                    gas.change24h < 0 ? "text-green-400" :
-                                        "text-white/50"
+                                gas.change24h < 0 ? "text-green-400" :
+                                    "text-white/50"
                                 }`}
                         >
                             {gas.change24h > 0 ? <TrendingUp className="w-3 h-3" /> :
