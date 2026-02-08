@@ -11,7 +11,7 @@ import { useState } from "react";
 const config = createConfig({
     chains: [sepolia, baseSepolia, arbitrumSepolia, optimismSepolia, polygonAmoy],
     transports: {
-        [sepolia.id]: http(),
+        [sepolia.id]: http(process.env.NEXT_PUBLIC_RPC_URL),
         [baseSepolia.id]: http(),
         [arbitrumSepolia.id]: http(),
         [optimismSepolia.id]: http(),
