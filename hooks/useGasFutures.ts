@@ -222,12 +222,21 @@ export function useRedeemCredits() {
 
         try {
             const timestamp = Math.floor(Date.now() / 1000);
-            const units = gasUnitsToUse === 'max' ? 0n : parseUnits(gasUnitsToUse, 18);
+            const pos = await api.getPosition(creditId);
+            if (!pos) throw new Error('Position not found');
 
-            let signAmount = units;
-            if (gasUnitsToUse === 'max') {
-                const pos = await api.getPosition(creditId);
-                signAmount = BigInt(pos?.remainingWethAmount || 0);
+            let signAmount: bigint;
+            if (gasUnitsToUse === 'max' || gasUnitsToUse === pos.gasUnitsAvailable) {
+                signAmount = BigInt(pos.remainingWethAmount);
+            } else {
+                // gasUnitsToUse is the amount of gas the user wants to redeem
+                // wethAmount = gasUnits * lockedGasPriceWei
+                signAmount = BigInt(Math.floor(parseFloat(gasUnitsToUse))) * BigInt(pos.lockedGasPriceWei);
+
+                // Cap at remainingWethAmount just in case of rounding
+                if (signAmount > BigInt(pos.remainingWethAmount)) {
+                    signAmount = BigInt(pos.remainingWethAmount);
+                }
             }
 
             // 1. Sign EIP-712 Intent
@@ -247,7 +256,7 @@ export function useRedeemCredits() {
             const result = await api.redeem({
                 user: address,
                 tokenId: creditId,
-                wethAmount: gasUnitsToUse === 'max' ? 'max' : signAmount.toString(),
+                wethAmount: (gasUnitsToUse === 'max' || (pos && gasUnitsToUse === pos.gasUnitsAvailable)) ? 'max' : signAmount.toString(),
                 userSignature: signature,
                 timestamp,
             });
