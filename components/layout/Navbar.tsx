@@ -169,9 +169,6 @@ export function Navbar() {
                                                                 className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_15px_rgba(213,206,163,0.3)] px-3 py-1.5 rounded-lg transition-all font-medium"
                                                             >
                                                                 {account.displayName}
-                                                                {account.displayBalance
-                                                                    ? ` (${account.displayBalance})`
-                                                                    : ''}
                                                             </Button>
                                                         </div>
                                                     );
@@ -248,7 +245,7 @@ export function Navbar() {
 
                             {/* Wallet Logic in Menu */}
                             <div className="mt-4 pt-4 border-t border-foreground/10 flex justify-center">
-                                <ConnectButton />
+                                <ConnectButton showBalance={false} />
                             </div>
                         </div>
                     </div>

@@ -5,21 +5,21 @@ import { Typography } from "@/components/ui/Typography";
 const CONTRACTS = [
     {
         name: "InvestInGasHook",
-        address: "0x814...[Sepolia]",
+        address: "0xaD5...80C0",
         network: "Sepolia",
-        explorerUrl: "https://sepolia.etherscan.io/address/0x8141eecf59C0b1e3c4F37f091a83F5267703C0C0"
+        explorerUrl: "https://sepolia.etherscan.io/address/0xaD599566C6cA5b222d782d152d21cF77efdc80C0"
     },
     {
         name: "GasOracle",
-        address: "0x96b...[Sui]",
+        address: "0x5fe...cb8c",
         network: "Sui Testnet",
-        explorerUrl: "https://suiscan.xyz/testnet/object/0x96b91ef74b3581bc836d44d4561d0ac5b50f82a16c2785eebffed5f25696d4a3/contracts"
+        explorerUrl: "https://suiscan.xyz/testnet/object/0x5fef78aab89f46b876bd9ab349887995994108443949269c2c867478fa53cb8c"
     },
     {
         name: "LiFiBridger",
-        address: "0xdbe...[Sepolia]",
+        address: "0xf5e...72cb",
         network: "Sepolia",
-        explorerUrl: "https://sepolia.etherscan.io/address/0xDBEe9A8B065d44398D12E61dE1bd0186084aDc3c"
+        explorerUrl: "https://sepolia.etherscan.io/address/0xf5e667d4a18a149145853d30e72b010b376272cb"
     }
 ];
 
