@@ -73,7 +73,7 @@ export default function AnalyticComponent() {
                     </div>
                     <button
                         onClick={() => setShowBanner(false)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-black/50 transition-all opacity-0 sm:opacity-100 bg-[#D5CEA3]"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-black/50 transition-all bg-[#D5CEA3]"
                         title="Dismiss"
                     >
                         <X className="w-4 h-4" />
@@ -165,14 +165,14 @@ export default function AnalyticComponent() {
             </div>
 
             {/* Savings by Chain */}
-            <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-8 rounded-3xl relative overflow-hidden">
+            <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-5 sm:p-8 rounded-3xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-[100px] pointer-events-none" />
 
-                <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-12 relative z-10">
                     {displayStats.length > 0 ? (
                         <>
                             <div className="w-full md:w-1/3 relative">
-                                <div className="h-[320px]">
+                                <div className="h-[240px] sm:h-[320px]">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
                                             <Pie
@@ -279,11 +279,11 @@ export default function AnalyticComponent() {
             </div>
 
             {/* Recent Savings */}
-            <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-8 rounded-3xl overflow-hidden relative">
-                <div className="flex items-center justify-between mb-8 relative z-10">
+            <div className="bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-5 sm:p-8 rounded-3xl overflow-hidden relative">
+                <div className="flex items-center justify-between mb-6 sm:mb-8 relative z-10">
                     <div>
-                        <h2 className="text-2xl font-bold tracking-tight">Recent Settlements</h2>
-                        <p className="text-white/40 text-sm mt-1">Real-time tracking of your gas redemptions</p>
+                        <h2 className="text-xl sm:text-2xl font-bold tracking-tight">Recent Settlements</h2>
+                        <p className="text-white/40 text-[10px] sm:text-sm mt-1">Real-time tracking of your gas redemptions</p>
                     </div>
                 </div>
 
