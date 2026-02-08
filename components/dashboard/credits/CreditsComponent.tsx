@@ -27,6 +27,8 @@ const THEME = {
     border: "#3C2A21",
 };
 
+import { toast } from "sonner";
+
 export default function CreditsComponent() {
     const { isConnected } = useAccount();
     const [selectedCredit, setSelectedCredit] = useState<GasCredit | null>(null);
@@ -46,6 +48,9 @@ export default function CreditsComponent() {
             setShowRedeemModal(false);
             setSelectedCredit(null);
             refetchCredits();
+            toast.success("Redemption Complete", {
+                description: "Your gas credits have been successfully redeemed.",
+            });
         }
     }, [redeemSuccess, refetchCredits]);
 
@@ -79,15 +84,42 @@ export default function CreditsComponent() {
         return option?.icon || chainName.charAt(0).toUpperCase();
     };
 
-    const handleRedeem = () => {
-        if (!selectedCredit || !redeemAmount) return;
+    const handleRedeem = async () => {
+        if (!selectedCredit) {
+            toast.error("No Selection", {
+                description: "Please select a gas credit position to redeem.",
+            });
+            return;
+        }
 
-        if (redeemType === "cash") {
-            redeemCredits(selectedCredit.id, redeemAmount);
-        } else {
-            // For cross-chain, we would get LiFi quote and use redeemCreditsWithLifi
-            // For now, just do cash settlement
-            redeemCredits(selectedCredit.id, redeemAmount);
+        if (!redeemAmount || parseFloat(redeemAmount) <= 0) {
+            toast.error("Invalid Amount", {
+                description: "Please enter a valid amount of gas units to redeem.",
+            });
+            return;
+        }
+
+        if (parseFloat(redeemAmount) > parseFloat(selectedCredit.remainingGasUnits)) {
+            toast.error("Amount Exceeded", {
+                description: "You cannot redeem more units than what is available in this position.",
+            });
+            return;
+        }
+
+        const promise = redeemType === "cash"
+            ? redeemCredits(selectedCredit.id, redeemAmount)
+            : redeemCredits(selectedCredit.id, redeemAmount); // Placeholder for cross-chain
+
+        toast.promise(promise, {
+            loading: "Redeeming credits...",
+            success: "Redemption transaction submitted.",
+            error: (err) => `Redemption failed: ${err.message || "Unknown error"}`,
+        });
+
+        try {
+            await promise;
+        } catch (error) {
+            console.error("Redeem failed:", error);
         }
     };
 

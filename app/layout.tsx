@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { Toaster } from "sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,6 +40,25 @@ export default function RootLayout({
       <body className={`${spaceGrotesk.variable} ${bioRhyme.variable} antialiased font-sans bg-background text-foreground min-h-screen min-h-dvh flex flex-col`}>
         <Providers>
           <div className="flex flex-col min-h-screen">
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  background: 'rgba(18, 18, 18, 0.7)',
+                  backdropFilter: 'blur(16px) saturate(180%)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  color: '#E5E5CB',
+                  borderRadius: '16px',
+                  boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.8)',
+                  fontSize: '12px',
+                  fontFamily: 'var(--font-space-grotesk)',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                },
+              }}
+              theme="dark"
+            />
             <Navbar />
             <GasTicker />
             {children}

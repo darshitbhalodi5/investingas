@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/Button";
 
 const MIN_PURCHASE_AMOUNT = 1;
 
+import { toast } from "sonner";
+
 export default function BuyCreditsComponent() {
     const { isConnected, chainId } = useAccount();
     const { switchChain } = useSwitchChain();
@@ -40,23 +42,59 @@ export default function BuyCreditsComponent() {
     useEffect(() => {
         if (purchaseSuccess) {
             setSuccess(true);
+            toast.success("Purchase Successful", {
+                description: `Successfully secured gas credits for ${selectedChainData?.chainName}.`,
+            });
         }
-    }, [purchaseSuccess]);
+    }, [purchaseSuccess, selectedChainData?.chainName]);
 
-    const handleChainSelect = (chainIdStr: string) => {
+    const handleChainSelect = async (chainIdStr: string) => {
         setSelectedChain(chainIdStr);
         const chainConfig = SUPPORTED_CHAINS.find(c => c.id === chainIdStr);
         if (chainConfig && switchChain && chainId !== chainConfig.chainId) {
             switchChain({ chainId: chainConfig.chainId });
+            // Note: switchChain usually handles its own UI in RainbowKit/Wagmi, 
+            // but we can add a descriptive toast.
+            toast.info("Switching Network", {
+                description: `Moving to ${chainConfig.name} for transaction preparation.`,
+            });
         }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!isConnected || usdcAmount < MIN_PURCHASE_AMOUNT || hasInsufficientBalance) return;
+
+        if (!isConnected) {
+            toast.error("Connection Required", {
+                description: "Please connect your wallet to purchase gas credits.",
+            });
+            return;
+        }
+
+        if (usdcAmount < MIN_PURCHASE_AMOUNT) {
+            toast.error("Invalid Amount", {
+                description: `The minimum purchase amount is $${MIN_PURCHASE_AMOUNT} USDC.`,
+            });
+            return;
+        }
+
+        if (hasInsufficientBalance) {
+            toast.error("Insufficient Funds", {
+                description: "You do not have enough USDC balance for this transaction.",
+            });
+            return;
+        }
+
+        const promise = purchaseCredits(amount, selectedChain, expiry);
+
+        toast.promise(promise, {
+            loading: isApproving ? "Approving USDC..." : "Executing transaction...",
+            success: "Confirm the transaction.",
+            error: (err) => `Failed to purchase: ${err.message || "Unknown error"}`,
+        });
 
         try {
-            await purchaseCredits(amount, selectedChain, expiry);
+            await promise;
         } catch (error) {
             console.error("Purchase failed:", error);
         }
